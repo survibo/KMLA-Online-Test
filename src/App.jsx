@@ -4,7 +4,7 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 
 import AuthCallback from "./AuthCallback";
 import Login from "./pages/Login";
-import ProfileEdit from "./pages/ProfileEdit";
+import ProfileSet from "./ProfileSet/ProfileSet";
 import Pending from "./pages/Pending";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
 
-      <Route path="/profile/edit" element={<ProfileEdit />} />
+      <Route path="/profile/set" element={<ProfileSet />} />
       
       <Route path="/pending" element={<Pending />} />
 

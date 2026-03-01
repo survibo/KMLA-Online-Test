@@ -18,7 +18,7 @@ export default function AuthCallback() {
       console.log("hash:", window.location.hash);
       console.log("search:", window.location.search);
       if (data.session) {
-        navigate("/profile/edit", { replace: true });
+        navigate("/profile/set", { replace: true });
       } else {
         navigate("/login", { replace: true });
       }

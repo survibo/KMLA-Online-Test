@@ -1,4 +1,3 @@
-// hooks/useAuth.js
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -17,20 +16,14 @@ export function useAuth() {
       setUser(data);
       setLoading(false);
     };
-    
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) fetchUser(session.user.id);
-      else setLoading(false);
-    });
 
-    // 세션 변화 감지 (로그인/로그아웃)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_, session) => {
+    // onAuthStateChange가 초기 세션(INITIAL_SESSION)도 처리해줌
+    // getSession() 따로 호출 불필요
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
       setSession(session);
-      if (session) fetchUser(session.user.id);
-      else {
+      if (session) {
+        fetchUser(session.user.id);
+      } else {
         setUser(null);
         setLoading(false);
       }
