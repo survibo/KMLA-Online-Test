@@ -1,7 +1,16 @@
-import HomePage from "./pages/home";
+import { CommunityPostDetail } from "@/components/blocks/community-post-detail";
+import {
+  sampleCommunityPostDetailComments,
+  sampleCommunityPostDetailPost,
+} from "@/components/blocks/community-post-detail/mock";
 
 function App() {
-  return <HomePage />;
+  return (
+    <CommunityPostDetail
+      post={sampleCommunityPostDetailPost}
+      commentItems={sampleCommunityPostDetailComments}
+    />
+  );
 }
 
 export default App;
