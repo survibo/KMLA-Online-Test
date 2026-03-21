@@ -1,5 +1,7 @@
 import { EllipsisVertical, MessageCircle, ThumbsUp } from "lucide-react"
 
+import "./styles.css"
+
 import { formatIsoDateTime, formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,7 +18,7 @@ import type {
   GroupComment,
   GroupPostImage,
   GroupUser,
-} from "./group-post-types"
+} from "./types"
 
 function getInitials(name: string) {
   return name
@@ -119,7 +121,7 @@ export function GroupPostStats({
         type="button"
         variant="ghost"
         size="sm"
-        className="h-8 rounded-full px-2.5 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+        className="group-post-action-like"
       >
         <ThumbsUp className="size-4.5" strokeWidth={2.2} />
         <span className="font-medium">{likes}</span>
@@ -128,7 +130,7 @@ export function GroupPostStats({
         type="button"
         variant="ghost"
         size="sm"
-        className="h-8 rounded-full px-2.5 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+        className="group-post-action-comment"
         onClick={onCommentClick}
       >
         <MessageCircle className="size-4.5" strokeWidth={2.2} />
@@ -220,7 +222,7 @@ function GroupCommentRow({
         <GroupAvatar author={item.author} size="sm" />
       </div>
       <div className="min-w-0 flex-1 space-y-1">
-        <div className="rounded-3xl bg-zinc-100 px-4 py-3">
+        <div className="group-post-comment-surface">
           <p className="font-semibold text-zinc-900">{item.author.name}</p>
           <p className="whitespace-pre-line text-zinc-700">{item.content}</p>
         </div>
@@ -232,7 +234,7 @@ function GroupCommentRow({
             type="button"
             variant="ghost"
             size="sm"
-            className="h-7 rounded-full px-2 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+            className="group-post-comment-action-like"
           >
             <ThumbsUp className="size-4" strokeWidth={2.2} />
             <span>{likes}</span>
@@ -241,7 +243,7 @@ function GroupCommentRow({
             type="button"
             variant="ghost"
             size="sm"
-            className="h-7 rounded-full px-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+            className="group-post-comment-action-comment"
           >
             <MessageCircle className="size-4" strokeWidth={2.2} />
             {showReplyCount ? <span>{replyCount}</span> : null}
@@ -284,7 +286,7 @@ export function GroupLatestCommentPreview({
   className?: string
 }) {
   return (
-    <div className={cn("flex gap-2.5 rounded-2xl bg-zinc-50 px-3.5 py-3", className)}>
+    <div className={cn("group-post-preview-surface flex gap-2.5", className)}>
       <div className="pt-0.5">
         <GroupAvatar author={comment.author} size="sm" />
       </div>

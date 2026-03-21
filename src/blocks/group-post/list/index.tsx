@@ -1,6 +1,6 @@
 import { ArrowLeft, ChevronDown, Plus, Search } from "lucide-react"
 
-import { GroupPostCard } from "@/blocks/group-post-card"
+import { GroupPostCard } from "@/blocks/group-post/card"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,

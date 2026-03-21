@@ -57,6 +57,7 @@
 기록 위치 기준:
 
 - block 전용 규칙: `src/blocks/<block-name>/README.md`
+- 도메인 내부 block 전용 규칙: `src/blocks/<domain>/<block-name>/README.md`
 - 여러 block이 공유하는 도메인 규칙: 루트의 별도 md 파일
 - 전체 프로젝트 공통 규칙: `AGENTS.md`
 - 데이터 구조 기준: `scheme.md`
@@ -84,8 +85,8 @@
 
 예:
 
-- `src/blocks/group-post-types.ts`
-- `src/blocks/group-post-shared.tsx`
+- `src/blocks/group-post/types.ts`
+- `src/blocks/group-post/shared.tsx`
 
 ## Working Style
 
@@ -238,6 +239,28 @@ src/blocks/<block-name>/
   README.md
 ```
 
+도메인 단위 block 구조를 쓰는 경우 권장 기본 구조:
+
+```text
+src/blocks/<domain>/
+  README.md
+  shared.tsx 필요시
+  types.ts 필요시
+  styles.css 필요시
+  something/
+    index.tsx
+    mock.ts
+    mock.scenarios.ts
+    types.ts
+    README.md
+  something2/
+    index.tsx
+    mock.ts
+    mock.scenarios.ts
+    types.ts
+    README.md
+```
+
 파일 역할:
 
 - `index.tsx`: block 본체
@@ -251,12 +274,30 @@ src/blocks/<block-name>/
 - `mock.scenarios.ts`는 선택 사항이다.
 - 하지만 mock을 자주 바꿔가며 실험하는 block이면 두는 쪽을 권장한다.
 - 공통 타입이나 공용 조각은 block 바깥으로 분리할 수 있다.
+- 여러 block이 같은 도메인 안에서 강하게 결합되어 있으면 `src/blocks/<domain>/...` 아래로 함께 묶는다.
+- 이 경우 도메인 공용 타입, 공용 UI 조각, 공용 스타일 토큰은 도메인 폴더 루트에 둔다.
+- 도메인 안에 있는 개별 block도 각자 `index.tsx`, `mock.ts`, `mock.scenarios.ts`, `types.ts`, `README.md`를 기본 단위로 유지한다.
 
 공용 파일 예:
 
-- 공통 타입: `src/blocks/group-post-types.ts`
-- 공통 UI 조각: `src/blocks/group-post-shared.tsx`
+- 공통 타입: `src/blocks/group-post/types.ts`
+- 공통 UI 조각: `src/blocks/group-post/shared.tsx`
+- 공통 스타일 토큰: `src/blocks/group-post/styles.css`
 - 공용 시간 포맷터: `src/lib/datetime.ts`
+
+스타일 구조 원칙:
+
+- 공용 스타일 토큰은 도메인 폴더 내부 CSS 파일에 모은다.
+- 반복되는 색상, surface, action button, drawer 같은 표현은 가능한 한 그 CSS에서 이름 있는 class로 관리한다.
+- block 본체에는 의미 있는 class 이름과 레이아웃 class만 남기고, 도메인 전용 표현은 도메인 CSS로 모은다.
+
+CSS로 분리하는 기준:
+
+- 같은 도메인 안에서 두 번 이상 반복되는 표현이면 CSS로 분리한다.
+- 핵심 색상, radius, hover/focus 톤처럼 한 번에 바뀔 가능성이 큰 값은 CSS 토큰이나 이름 있는 class로 둔다.
+- drawer 방향 selector, data attribute selector, 복합 hover/focus 상태처럼 JSX에서 읽기 어려운 규칙은 CSS로 둔다.
+- 버튼, 댓글 박스, 입력창, surface처럼 의미 있는 UI 표현은 CSS class 이름으로 관리한다.
+- 반대로 파일 하나에서만 쓰는 단순 레이아웃, flex/grid 배치, 국소 spacing은 JSX/Tailwind에 남겨도 된다.
 
 시간 표시 규칙:
 

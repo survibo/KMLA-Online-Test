@@ -38,6 +38,8 @@
 - 대표 이미지 선택 방식
 - 최신 댓글 미리보기 방식
 - 댓글 버튼을 눌렀을 때 여는 댓글 drawer UI
+- 카드와 댓글 drawer가 공유하는 스타일 토큰과 CSS class 이름
+- 카드 본체와 댓글 drawer의 책임 분리 방식
 - 목록 카드의 타이포 밀도
 - 목록용 mock data shape
 
@@ -46,9 +48,13 @@
 ## Files
 
 - `index.tsx`: 목록 카드 본체
+- `comments-drawer.tsx`: 카드에서 여는 댓글 drawer 전용 컴포넌트
 - `mock.ts`: 기준이 되는 base mock과 생성 helper
 - `mock.scenarios.ts`: 이미지 유무 같은 실험용 시나리오 mock
 - `types.ts`: 목록 카드용 타입 alias
+- `../types.ts`: group post 공용 타입
+- `../shared.tsx`: group post 공용 UI 조각
+- `../styles.css`: group post 계열 공용 색상 토큰과 댓글 UI 스타일
 
 ## Mock Workflow
 
@@ -61,10 +67,10 @@ mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 ## Example
 
 ```tsx
-import { GroupPostCard } from "@/blocks/group-post-card"
+import { GroupPostCard } from "@/blocks/group-post/card"
 import {
   activeGroupPostCardScenario,
-} from "@/blocks/group-post-card/mock.scenarios"
+} from "@/blocks/group-post/card/mock.scenarios"
 
 export function Example() {
   return <GroupPostCard post={activeGroupPostCardScenario.post} />

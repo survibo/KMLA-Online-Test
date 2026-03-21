@@ -24,7 +24,7 @@ export const groupPostCardWithImageScenario: GroupPostCardScenario = {
 export const groupPostCardBusyDiscussionScenario: GroupPostCardScenario = {
   id: "busy-discussion",
   label: "댓글 여러 개",
-  description: "최상위 댓글 2개와 답글이 함께 있는 토론형 카드 상태",
+  description: "최상위 댓글 여러 개와 답글이 길게 이어지는 토론형 카드 상태",
   post: createGroupPostCardPost({
     id: "group-post-card-busy-discussion",
     reaction_count: 7,

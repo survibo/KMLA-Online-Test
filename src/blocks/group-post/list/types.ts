@@ -1,4 +1,4 @@
-import type { GroupPost } from "@/blocks/group-post-types"
+import type { GroupPost } from "@/blocks/group-post/types"
 
 export type GroupPostListData = GroupPost[]
 

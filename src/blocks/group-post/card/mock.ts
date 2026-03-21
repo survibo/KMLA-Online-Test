@@ -3,6 +3,7 @@ import type { GroupPostCardData } from "./types"
 const POST_ID = "dfb5a0a2-5ef8-4be2-87d5-3ebc4a2370a1"
 const ROOT_COMMENT_ID = "b741b315-d9c5-4568-bfb8-97a58c48bc79"
 const SECOND_ROOT_COMMENT_ID = "51f7f117-dac0-4c46-94fa-e83617f3d098"
+const THIRD_ROOT_COMMENT_ID = "4dd45dc8-f216-40d1-b0fb-d24c1ff0bf65"
 
 function countTopLevelComments(postComments: GroupPostCardData["post_comments"] = []) {
   return postComments.filter((comment) => comment.parent_id === null).length
@@ -169,6 +170,23 @@ export const baseGroupPostCardDiscussionComments: NonNullable<
     comment_reactions: [],
   },
   {
+    id: "93618ddc-f4dc-457f-b775-857dbd1bd15f",
+    post_id: POST_ID,
+    author_id: "890aa09e-7a2f-4963-bd48-e7214efd2a0d",
+    parent_id: ROOT_COMMENT_ID,
+    author: {
+      id: "890aa09e-7a2f-4963-bd48-e7214efd2a0d",
+      name: "27기 오민재",
+      img: null,
+    },
+    content: "단체 주문이면 사이즈 변경 가능 기간도 함께 안내 부탁드립니다.",
+    reply_count: 0,
+    created_at: "2026-03-20T15:16:00+09:00",
+    updated_at: null,
+    deleted_at: null,
+    comment_reactions: [],
+  },
+  {
     id: SECOND_ROOT_COMMENT_ID,
     post_id: POST_ID,
     author_id: "0859f193-a0f4-4eeb-b4dc-a3bc69980c49",
@@ -181,6 +199,65 @@ export const baseGroupPostCardDiscussionComments: NonNullable<
     content: "추가 신청 폼이 열리면 공지로 다시 올려 주세요.",
     reply_count: 0,
     created_at: "2026-03-20T15:18:00+09:00",
+    updated_at: null,
+    deleted_at: null,
+    comment_reactions: [],
+  },
+  {
+    id: "be620339-0b31-4ce0-a767-c642ce4a4d15",
+    post_id: POST_ID,
+    author_id: "c2ecfe2d-e2e2-4808-ac65-f2014cf03efa",
+    parent_id: null,
+    author: {
+      id: "c2ecfe2d-e2e2-4808-ac65-f2014cf03efa",
+      name: "31기 최도현",
+      img: null,
+    },
+    content: "추가 신청 열리면 이번엔 구글폼 링크도 함께 부탁드립니다.",
+    reply_count: 1,
+    created_at: "2026-03-20T15:22:00+09:00",
+    updated_at: null,
+    deleted_at: null,
+    comment_reactions: [
+      {
+        id: "c3f5bf72-78f9-4b77-bf55-8f90c2e4e50b",
+        comment_id: "be620339-0b31-4ce0-a767-c642ce4a4d15",
+        user_id: "0859f193-a0f4-4eeb-b4dc-a3bc69980c49",
+        type: "like",
+        created_at: "2026-03-20T15:23:00+09:00",
+      },
+    ],
+  },
+  {
+    id: THIRD_ROOT_COMMENT_ID,
+    post_id: POST_ID,
+    author_id: "4f2d6bd8-7399-47ea-9be9-5be2f83750a5",
+    parent_id: "be620339-0b31-4ce0-a767-c642ce4a4d15",
+    author: {
+      id: "4f2d6bd8-7399-47ea-9be9-5be2f83750a5",
+      name: "31기 강하린",
+      img: null,
+    },
+    content: "맞아요. 지난번 링크를 못 봐서 신청 놓친 사람도 있었어요.",
+    reply_count: 0,
+    created_at: "2026-03-20T15:24:00+09:00",
+    updated_at: null,
+    deleted_at: null,
+    comment_reactions: [],
+  },
+  {
+    id: "db15a793-2ce0-4d72-b0bf-d4f3997848dd",
+    post_id: POST_ID,
+    author_id: "f6fdb3ab-fab2-4c70-9c3b-c3b78cca5140",
+    parent_id: null,
+    author: {
+      id: "f6fdb3ab-fab2-4c70-9c3b-c3b78cca5140",
+      name: "26기 한지우",
+      img: null,
+    },
+    content: "이번엔 수령 시간대도 세분화해서 받을 수 있으면 좋겠습니다.",
+    reply_count: 0,
+    created_at: "2026-03-20T15:27:00+09:00",
     updated_at: null,
     deleted_at: null,
     comment_reactions: [],

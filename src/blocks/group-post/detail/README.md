@@ -19,7 +19,8 @@
 - 게시글 댓글 수: `comment_count` (최상위 댓글 수)
 - 댓글 답글 수: `reply_count` (직계 답글 수)
 - 이미지 정렬 기준: `post_images.sort_order`
-- 댓글 목록 렌더링은 `group-post-shared`의 공용 thread 조각을 재사용한다.
+- 댓글 목록 렌더링은 `src/blocks/group-post/shared.tsx`의 공용 thread 조각을 재사용한다.
+- 댓글 계열 색상과 반복 스타일은 `src/blocks/group-post/styles.css`에서 공용으로 관리한다.
 
 캐시 컬럼이 없을 때만 화면에서 fallback 계산을 허용한다.
 
@@ -79,8 +80,8 @@ mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 ```tsx
 import {
   activeGroupPostDetailScenario,
-} from "@/blocks/group-post-detail/mock.scenarios"
-import { GroupPostDetail } from "@/blocks/group-post-detail"
+} from "@/blocks/group-post/detail/mock.scenarios"
+import { GroupPostDetail } from "@/blocks/group-post/detail"
 
 export function Example() {
   return (

@@ -5,12 +5,12 @@ import {
   GroupPostGallery,
   GroupPostHeader,
   GroupPostStats,
-} from "@/blocks/group-post-shared"
+} from "@/blocks/group-post/shared"
 import { cn } from "@/lib/utils"
 import type {
   GroupComment,
   GroupPost,
-} from "@/blocks/group-post-types"
+} from "@/blocks/group-post/types"
 
 type GroupPostDetailProps = {
   post: GroupPost

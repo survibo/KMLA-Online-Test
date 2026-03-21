@@ -1,4 +1,4 @@
-import { createGroupPostCardPost } from "@/blocks/group-post-card/mock"
+import { createGroupPostCardPost } from "@/blocks/group-post/card/mock"
 import type { GroupPostListGroup } from "./types"
 
 const BASE_GROUP_POST_LIST_GROUP_ID = "6f6e9a30-6078-4f80-99e7-42f6d4f6b0c7"

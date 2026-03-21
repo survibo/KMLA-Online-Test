@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 
-import { GroupPostCard } from "@/blocks/group-post-card"
-import { groupPostCardScenarios } from "@/blocks/group-post-card/mock.scenarios"
-import { GroupPostDetail } from "@/blocks/group-post-detail"
-import { groupPostDetailScenarios } from "@/blocks/group-post-detail/mock.scenarios"
-import { GroupPostList } from "@/blocks/group-post-list"
-import { groupPostListScenarios } from "@/blocks/group-post-list/mock.scenarios"
+import { GroupPostCard } from "@/blocks/group-post/card"
+import { groupPostCardScenarios } from "@/blocks/group-post/card/mock.scenarios"
+import { GroupPostDetail } from "@/blocks/group-post/detail"
+import { groupPostDetailScenarios } from "@/blocks/group-post/detail/mock.scenarios"
+import { GroupPostList } from "@/blocks/group-post/list"
+import { groupPostListScenarios } from "@/blocks/group-post/list/mock.scenarios"
 import { Button } from "@/components/ui/button"
 
 const scenarioGroups = [
