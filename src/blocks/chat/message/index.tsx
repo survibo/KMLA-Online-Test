@@ -51,7 +51,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
       <div
         ref={scrollContainerRef}
         onScroll={(event) => updateScrollState(event.currentTarget)}
-        className="h-full w-full overflow-y-auto px-3 py-4 text-zinc-950 sm:px-4"
+        className="h-full w-full overflow-y-auto pl-2 pr-1 py-4 text-zinc-950 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:pl-3 sm:pr-2"
       >
         <div className="pb-10">
           {data.messages.map((message, index) => {
@@ -83,7 +83,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                 ) : null}
 
                 {!isOwn && startsNewBlock ? (
-                  <div className="mb-1 pl-14 text-[13px] font-medium text-zinc-500">
+                  <div className="mb-0.5 pl-14 text-[13px] font-normal text-zinc-500">
                     {message.sender.name}
                   </div>
                 ) : null}
@@ -96,7 +96,9 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                 >
                   <div
                     className={cn(
-                      isOwn ? "max-w-[78%]" : "relative max-w-[78%] pl-12"
+                      isOwn
+                        ? "max-w-[70%]"
+                        : "relative max-w-[70%] pl-12"
                     )}
                   >
                     {!isOwn && endsBlock ? (
@@ -108,7 +110,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
 
                     <div
                       className={cn(
-                        "inline-flex max-w-full px-4 py-2.5 text-[15px] leading-[1.45] shadow-none",
+                        "w-full px-4 py-2.5 text-[15px] leading-[1.45] shadow-none",
                         startsNewBlock
                           ? "rounded-t-[22px]"
                           : isOwn
@@ -125,7 +127,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                           : "bg-zinc-100 text-zinc-900"
                       )}
                     >
-                      <span className="block text-left whitespace-normal break-keep [overflow-wrap:anywhere]">
+                      <span className="whitespace-normal break-keep wrap-break-word">
                         {message.content}
                       </span>
                     </div>

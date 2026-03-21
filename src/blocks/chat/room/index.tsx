@@ -48,7 +48,7 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
         </Button>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-hidden px-2 py-0 sm:px-4">
+      <div className="min-h-0 flex-1 overflow-hidden px-0 py-0 sm:px-1">
         <ChatMessage data={data} className="h-full" />
       </div>
 
