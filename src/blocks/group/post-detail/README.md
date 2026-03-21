@@ -33,7 +33,7 @@
 - 댓글 아이콘 숫자는 direct child count 기준이다.
 - 대표 액션 버튼은 `shadcn/ui`의 `Button` 기반으로 유지한다.
 - 상세 제목 타이포는 목록 카드와 과하게 벌어지지 않도록 같은 밀도 범위를 유지한다.
-- 게시글 헤더, 본문, 이미지, 액션 영역은 `src/blocks/group/shared.tsx`의 공용 post UI 조각을 우선 사용한다.
+- 게시글 헤더, 본문, 이미지, 액션 영역은 `src/blocks/group/shared.tsx`의 공용 post summary를 카드와 같은 폭/패딩 기준으로 그대로 사용한다.
 
 이 규칙은 공통 가이드가 아니라 이 block에서 관리한다.
 

@@ -2,7 +2,6 @@ import { EllipsisVertical, MessageCircle, ThumbsUp } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,41 +11,16 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
-import type {
-  GroupComment,
-  GroupPost,
-  GroupUser,
-} from "@/blocks/group/types"
+import type { GroupComment, GroupPost } from "@/blocks/group/types"
 import {
-  getGroupInitials,
-  GroupPostContent,
-  GroupPostHeader,
-  GroupPostStats,
+  GroupPostAvatar,
+  GroupPostSummary,
 } from "@/blocks/group/shared"
 
 type GroupPostDetailProps = {
   post: GroupPost
   commentItems?: GroupComment[]
   className?: string
-}
-
-function GroupDetailAvatar({
-  author,
-  size = "sm",
-}: {
-  author: GroupUser
-  size?: "xs" | "sm"
-}) {
-  const className = size === "xs" ? "size-7" : "size-9"
-
-  return (
-    <Avatar size="default" className={cn(className, "shrink-0")}>
-      <AvatarImage src={author.img} alt={author.name} />
-      <AvatarFallback className="bg-gradient-to-b from-zinc-100 to-zinc-300 font-semibold text-zinc-600">
-        {getGroupInitials(author.name)}
-      </AvatarFallback>
-    </Avatar>
-  )
 }
 
 type GroupCommentMeta = {
@@ -147,7 +121,7 @@ function GroupCommentRow({
   return (
     <div className={cn("flex gap-2.5", depth > 0 && "ml-7")}>
       <div className="pt-1">
-        <GroupDetailAvatar author={item.author} size={depth > 0 ? "xs" : "sm"} />
+        <GroupPostAvatar author={item.author} size={depth > 0 ? "xs" : "sm"} />
       </div>
       <div className="min-w-0 flex-1">
         <div className="py-0.5">
@@ -208,7 +182,7 @@ function GroupCommentThread({
   if (flattenedComments.length === 0) return null
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-2">
       {flattenedComments.map(({ item, ...meta }, index) => (
         <GroupCommentRow
           key={item.id ?? `${item.author.name}-${index}`}
@@ -228,50 +202,41 @@ export function GroupPostDetail({
 }: GroupPostDetailProps) {
   return (
     <section className={cn("w-full bg-white", className)}>
-      <div className="mx-auto w-full max-w-[560px]">
-        <Card className="rounded-none border-0 bg-white py-0 shadow-none ring-0">
-          <CardContent className="flex flex-col gap-5 px-4 py-4 sm:px-6">
-            <GroupPostHeader
-              author={post.author}
-              createdAt={post.created_at}
-              trailing={
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
-                      aria-label="More options"
-                    >
-                      <EllipsisVertical className="size-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem>Share</DropdownMenuItem>
-                    <DropdownMenuItem>Save</DropdownMenuItem>
-                    <DropdownMenuItem variant="destructive">Report</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              }
-            />
+      <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-6">
+          <GroupPostSummary
+            post={post}
+            trailing={
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+                    aria-label="More options"
+                  >
+                    <EllipsisVertical className="size-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                  <DropdownMenuItem>Share</DropdownMenuItem>
+                  <DropdownMenuItem>Save</DropdownMenuItem>
+                  <DropdownMenuItem variant="destructive">Report</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            }
+          />
 
-            <GroupPostContent post={post} />
-
-            <GroupPostStats post={post} />
-
-            {commentItems.length > 0 ? (
-              <div className="flex flex-col gap-5">
-                <Separator className="bg-zinc-200" />
-                <GroupCommentThread
-                  commentItems={commentItems}
-                  postAuthorId={post.author_id}
-                />
-              </div>
-            ) : null}
-          </CardContent>
-        </Card>
-      </div>
+          {commentItems.length > 0 ? (
+            <div className="space-y-5">
+              <Separator className="bg-zinc-200" />
+              <GroupCommentThread
+                commentItems={commentItems}
+                postAuthorId={post.author_id}
+              />
+            </div>
+          ) : null}
+        </div>
     </section>
   )
 }

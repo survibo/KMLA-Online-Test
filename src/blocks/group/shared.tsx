@@ -26,11 +26,12 @@ export function GroupPostAvatar({
   className,
 }: {
   author: GroupUser
-  size?: "sm" | "lg"
+  size?: "xs" | "sm" | "lg"
   className?: string
 }) {
-  const avatarClassName = size === "sm" ? "size-9" : "size-10"
-  const avatarSize = size === "sm" ? "default" : "lg"
+  const avatarClassName =
+    size === "xs" ? "size-7" : size === "sm" ? "size-9" : "size-10"
+  const avatarSize = size === "lg" ? "lg" : "default"
 
   return (
     <Avatar size={avatarSize} className={cn(avatarClassName, "shrink-0", className)}>
@@ -59,7 +60,7 @@ export function GroupPostHeader({
       : formatIsoDateTime(createdAt)
 
   return (
-    <div className="flex items-start justify-between gap-4 py-4">
+    <div className="flex items-start justify-between gap-4">
       <div className="flex min-w-0 items-start gap-2.5">
         <GroupPostAvatar author={author} />
         <div className="min-w-0">
@@ -151,7 +152,7 @@ export function GroupPostStats({
     0
 
   return (
-    <div className="mb-0.5 -ml-1.5 flex items-center gap-0.5 text-sm text-zinc-500">
+    <div className="-ml-1.5 flex items-center gap-0.5 text-sm text-zinc-500">
       <Button
         type="button"
         variant="ghost"
@@ -180,6 +181,35 @@ export function GroupPostStats({
       >
         <Share2 className="size-5" strokeWidth={2.2} />
       </Button>
+    </div>
+  )
+}
+
+export function GroupPostSummary({
+  post,
+  timeVariant = "absolute",
+  trailing,
+  onCommentClick,
+  className,
+}: {
+  post: GroupPost
+  timeVariant?: "absolute" | "relative"
+  trailing?: ReactNode
+  onCommentClick?: () => void
+  className?: string
+}) {
+  return (
+    <div className={cn("space-y-3", className)}>
+      <GroupPostHeader
+        author={post.author}
+        createdAt={post.created_at}
+        timeVariant={timeVariant}
+        trailing={trailing}
+      />
+      <div className="space-y-0.5">
+        <GroupPostContent post={post} />
+        <GroupPostStats post={post} onCommentClick={onCommentClick} />
+      </div>
     </div>
   )
 }

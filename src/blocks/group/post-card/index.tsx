@@ -3,9 +3,7 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import type { GroupPost } from "@/blocks/group/types"
 import {
-  GroupPostContent,
-  GroupPostHeader,
-  GroupPostStats,
+  GroupPostSummary,
 } from "@/blocks/group/shared"
 
 import { GroupPostCommentsDrawer } from "./comments-drawer"
@@ -32,17 +30,10 @@ export function GroupPostCard({
           className
         )}
       >
-        <div className="mx-auto flex w-full max-w-4xl flex-col px-4 sm:px-6">
-          <GroupPostHeader
-            author={post.author}
-            createdAt={post.created_at}
-            timeVariant={timeVariant}
-          />
-
-          <GroupPostContent post={post} />
-
-          <GroupPostStats
+        <div className="mx-auto w-full max-w-4xl px-4 pt-3 sm:px-6">
+          <GroupPostSummary
             post={post}
+            timeVariant={timeVariant}
             onCommentClick={() => setIsCommentsOpen(true)}
           />
         </div>

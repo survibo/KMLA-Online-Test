@@ -23,6 +23,7 @@
 - `post.comment_count`는 `post.post_comments`의 최상위 댓글 수와 맞춰 유지한다.
 - `post.post_comments`는 카드 안에서 미리 노출하지 않고 drawer용 전체 댓글로 유지한다.
 - 대표 이미지는 공용 `shared.tsx`의 gallery 규칙을 따르며, 첫 번째 이미지를 보여주고 나머지 개수는 overlay로 표시한다.
+- 게시글 헤더, 본문, 이미지, 액션 영역은 `src/blocks/group/shared.tsx`의 공용 post summary를 사용한다.
 - block mock은 `src/blocks/group/mock.ts`의 raw post/comment/reaction을 source of truth로 사용한다.
 
 권장:

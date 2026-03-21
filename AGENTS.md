@@ -376,7 +376,6 @@ src/blocks/<domain>/
 - 공용 스타일 토큰은 도메인 폴더 내부 CSS 파일에 모은다.
 - 반복되는 색상, surface, action button, drawer 같은 표현은 가능한 한 그 CSS에서 이름 있는 class로 관리한다.
 - block 본체에는 의미 있는 class 이름과 레이아웃 class만 남기고, 도메인 전용 표현은 도메인 CSS로 모은다.
-- 간격은 `space-x-*`, `space-y-*`보다 `margin`, `padding`, `gap`을 직접 써서 명시적으로 표현한다.
 
 CSS로 분리하는 기준:
 
