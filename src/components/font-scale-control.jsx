@@ -3,11 +3,13 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 
 const FONT_SCALE_STORAGE_KEY = "app-font-scale"
+const DEFAULT_FONT_SCALE = 0.97
+const FONT_SCALE_STEP = 0.03
 
 const fontScaleOptions = [
-  { value: 0.94, label: "A-" },
-  { value: 1, label: "A" },
-  { value: 1.08, label: "A+" },
+  { value: DEFAULT_FONT_SCALE - FONT_SCALE_STEP, label: "A-" },
+  { value: DEFAULT_FONT_SCALE, label: "A" },
+  { value: DEFAULT_FONT_SCALE + FONT_SCALE_STEP, label: "A+" },
 ]
 
 function applyFontScale(scale) {
@@ -15,12 +17,12 @@ function applyFontScale(scale) {
 }
 
 export function FontScaleControl() {
-  const [fontScale, setFontScale] = useState(1)
+  const [fontScale, setFontScale] = useState(DEFAULT_FONT_SCALE)
 
   useEffect(() => {
     const storedScale = window.localStorage.getItem(FONT_SCALE_STORAGE_KEY)
-    const parsedScale = storedScale ? Number(storedScale) : 1
-    const nextScale = Number.isFinite(parsedScale) ? parsedScale : 1
+    const parsedScale = storedScale ? Number(storedScale) : DEFAULT_FONT_SCALE
+    const nextScale = Number.isFinite(parsedScale) ? parsedScale : DEFAULT_FONT_SCALE
 
     setFontScale(nextScale)
     applyFontScale(nextScale)
