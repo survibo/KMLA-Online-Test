@@ -22,7 +22,7 @@ export function createGroupPostCardPostFromMockData(
 
   return {
     ...post,
-    post_images: post.post_images?.slice(0, 1),
+    post_images: post.post_images,
     post_comments: post.post_comments,
     comment_count: countTopLevelComments(post.post_comments),
   }

@@ -162,7 +162,7 @@ const busyDiscussionMockData = createGroupPostMockData({
 export const groupPostCardWithImageScenario: GroupPostCardScenario = {
   id: "with-image",
   label: "이미지 있음",
-  description: "대표 이미지와 최상위 댓글 1개가 함께 있는 기본 카드 상태",
+  description: "대표 이미지와 기본 액션이 함께 있는 기본 카드 상태",
   post: createGroupPostCardPost(),
 }
 
@@ -179,7 +179,7 @@ export const groupPostCardBusyDiscussionScenario: GroupPostCardScenario = {
 export const groupPostCardWithoutCommentsScenario: GroupPostCardScenario = {
   id: "without-comments",
   label: "댓글 없음",
-  description: "최신 댓글 미리보기 없이 카드만 보이는 상태",
+  description: "댓글 수가 0으로 보이는 카드 상태",
   post: createGroupPostCardPost(baseGroupPostPrimaryPostId, {
     posts: baseGroupPostMockData.posts.map((post) =>
       post.id === baseGroupPostPrimaryPostId
@@ -195,7 +195,7 @@ export const groupPostCardWithoutCommentsScenario: GroupPostCardScenario = {
 export const groupPostCardWithoutImageWithoutCommentsScenario: GroupPostCardScenario = {
   id: "without-image-without-comments",
   label: "이미지도 없고 댓글도 없음",
-  description: "대표 이미지와 최신 댓글 미리보기 없이 텍스트만 남는 카드 상태",
+  description: "대표 이미지 없이 텍스트와 액션만 남는 카드 상태",
   post: createGroupPostCardPost(baseGroupPostPrimaryPostId, {
     posts: baseGroupPostMockData.posts.map((post) =>
       post.id === baseGroupPostPrimaryPostId

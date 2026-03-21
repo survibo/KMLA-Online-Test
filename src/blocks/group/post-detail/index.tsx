@@ -10,14 +10,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
-import { formatIsoDateTime, formatRelativeTime } from "@/lib/datetime"
+import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import type {
   GroupComment,
   GroupPost,
-  GroupPostImage,
   GroupUser,
 } from "@/blocks/group/types"
+import {
+  getGroupInitials,
+  GroupPostContent,
+  GroupPostHeader,
+  GroupPostStats,
+} from "@/blocks/group/shared"
 
 type GroupPostDetailProps = {
   post: GroupPost
@@ -25,166 +30,22 @@ type GroupPostDetailProps = {
   className?: string
 }
 
-function getInitials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("")
-}
-
 function GroupDetailAvatar({
   author,
-  size = "md",
+  size = "sm",
 }: {
   author: GroupUser
-  size?: "xs" | "sm" | "md"
+  size?: "xs" | "sm"
 }) {
-  const avatarSize = size === "md" ? "lg" : "default"
-  const className =
-    size === "xs" ? "size-7" : size === "sm" ? "size-9" : "size-10"
+  const className = size === "xs" ? "size-7" : "size-9"
 
   return (
-    <Avatar size={avatarSize} className={cn(className, "shrink-0")}>
+    <Avatar size="default" className={cn(className, "shrink-0")}>
       <AvatarImage src={author.img} alt={author.name} />
       <AvatarFallback className="bg-gradient-to-b from-zinc-100 to-zinc-300 font-semibold text-zinc-600">
-        {getInitials(author.name)}
+        {getGroupInitials(author.name)}
       </AvatarFallback>
     </Avatar>
-  )
-}
-
-function GroupPostDetailHeader({
-  author,
-  createdAt,
-}: {
-  author: GroupUser
-  createdAt: string
-}) {
-  return (
-    <div className="flex items-start justify-between gap-4">
-      <div className="flex items-center gap-2.5">
-        <GroupDetailAvatar author={author} />
-        <div>
-          <p className="text-[1.05rem] leading-5 font-semibold tracking-tight text-zinc-900">
-            {author.name}
-          </p>
-          <p className="mt-0.5 text-[0.875rem] leading-5 font-medium text-zinc-500">
-            {formatIsoDateTime(createdAt)}
-          </p>
-        </div>
-      </div>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
-            aria-label="More options"
-          >
-            <EllipsisVertical className="size-5" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-40">
-          <DropdownMenuItem>Share</DropdownMenuItem>
-          <DropdownMenuItem>Save</DropdownMenuItem>
-          <DropdownMenuItem variant="destructive">Report</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  )
-}
-
-function GroupPostDetailGallery({
-  images = [],
-}: {
-  images?: GroupPostImage[]
-}) {
-  const sortedImages = [...images].sort((a, b) => a.sort_order - b.sort_order)
-  const totalImageCount = sortedImages.length
-
-  if (totalImageCount === 0) return null
-
-  if (totalImageCount <= 3) {
-    const featuredImage = sortedImages[0]
-
-    return (
-      <div className="relative overflow-hidden rounded-[1.5rem] bg-zinc-100">
-        <img
-          src={featuredImage.url}
-          alt={featuredImage.alt ?? "Post attachment preview"}
-          className="aspect-square w-full object-cover"
-        />
-        {totalImageCount > 1 ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/28 text-6xl font-bold text-white">
-            +{totalImageCount - 1}
-          </div>
-        ) : null}
-      </div>
-    )
-  }
-
-  const visibleImages = sortedImages.slice(0, 4)
-  const hiddenCount = totalImageCount - 4
-
-  return (
-    <div className="grid grid-cols-2 gap-2">
-      {visibleImages.map((image, index) => {
-        const showOverlay = index === 3 && hiddenCount > 0
-
-        return (
-          <div
-            key={image.id ?? `${image.url}-${index}`}
-            className="relative overflow-hidden rounded-[1.5rem] bg-zinc-100"
-          >
-            <img
-              src={image.url}
-              alt={image.alt ?? "Post attachment preview"}
-              className="aspect-square w-full object-cover"
-            />
-            {showOverlay ? (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/28 text-5xl font-bold text-white">
-                +{hiddenCount}
-              </div>
-            ) : null}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-function GroupPostDetailStats({ post }: { post: GroupPost }) {
-  const likes = post.reaction_count ?? post.post_reactions?.length ?? 0
-  const comments =
-    post.comment_count ??
-    post.post_comments?.filter((comment) => comment.parent_id === null).length ??
-    0
-
-  return (
-    <div className="flex items-center gap-0.5 -ml-1.5 text-sm text-zinc-500">
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="h-8 justify-start gap-1 px-1.5 py-0 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
-      >
-        <ThumbsUp className="size-4.5" strokeWidth={2.2} />
-        <span className="font-medium">{likes}</span>
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="h-8 justify-start gap-1 px-1.5 py-0 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700"
-      >
-        <MessageCircle className="size-4.5" strokeWidth={2.2} />
-        <span className="font-medium">{comments}</span>
-      </Button>
-    </div>
   )
 }
 
@@ -365,36 +226,39 @@ export function GroupPostDetail({
   commentItems = [],
   className,
 }: GroupPostDetailProps) {
-  const images = post.post_images ?? []
-
   return (
     <section className={cn("w-full bg-white", className)}>
       <div className="mx-auto w-full max-w-[560px]">
         <Card className="rounded-none border-0 bg-white py-0 shadow-none ring-0">
           <CardContent className="flex flex-col gap-5 px-4 py-4 sm:px-6">
-            <GroupPostDetailHeader
+            <GroupPostHeader
               author={post.author}
               createdAt={post.created_at}
+              trailing={
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+                      aria-label="More options"
+                    >
+                      <EllipsisVertical className="size-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem>Share</DropdownMenuItem>
+                    <DropdownMenuItem>Save</DropdownMenuItem>
+                    <DropdownMenuItem variant="destructive">Report</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              }
             />
 
-            {post.title || post.content ? (
-              <div>
-                {post.title ? (
-                  <h2 className="text-[1.5rem] leading-[1.08] font-bold tracking-[-0.03em] text-zinc-950">
-                    {post.title}
-                  </h2>
-                ) : null}
-                {post.content ? (
-                  <p className="mt-2.5 whitespace-pre-line break-keep text-zinc-600">
-                    {post.content}
-                  </p>
-                ) : null}
-              </div>
-            ) : null}
+            <GroupPostContent post={post} />
 
-            <GroupPostDetailGallery images={images} />
-
-            <GroupPostDetailStats post={post} />
+            <GroupPostStats post={post} />
 
             {commentItems.length > 0 ? (
               <div className="flex flex-col gap-5">

@@ -11,7 +11,6 @@
 - 제목
 - 본문 일부
 - 대표 이미지 1장
-- 최신 댓글 1개 미리보기
 - 반응 수와 댓글 수
 
 ## Data Contract
@@ -22,8 +21,8 @@
 
 - `post.reaction_count`가 있으면 좋아요 수는 그 값을 우선 사용한다.
 - `post.comment_count`는 `post.post_comments`의 최상위 댓글 수와 맞춰 유지한다.
-- `post.post_comments`는 drawer용 전체 댓글을 유지하고, 카드 안의 최신 댓글 1개 미리보기는 최상위 댓글만 대상으로 렌더링 단계에서 계산한다.
-- 대표 이미지는 `post_images.sort_order asc` 기준 첫 번째 항목을 사용한다.
+- `post.post_comments`는 카드 안에서 미리 노출하지 않고 drawer용 전체 댓글로 유지한다.
+- 대표 이미지는 공용 `shared.tsx`의 gallery 규칙을 따르며, 첫 번째 이미지를 보여주고 나머지 개수는 overlay로 표시한다.
 - block mock은 `src/blocks/group/mock.ts`의 raw post/comment/reaction을 source of truth로 사용한다.
 
 권장:
@@ -36,12 +35,11 @@
 아래 규칙은 이 block 가까이에 유지한다.
 
 - 목록 카드에서 보여줄 정보 범위
-- 대표 이미지 선택 방식
-- 최신 댓글 미리보기 방식
+- 대표 이미지 위 공용 gallery 사용 방식
 - 댓글 버튼을 눌렀을 때 여는 댓글 drawer UI
 - 댓글 drawer에서 답글을 기본 접기 상태로 둘지와 `답글 보기` 토글 방식
 - 모바일에서 댓글 입력을 시작해도 목록이 갑자기 잘리지 않도록 composer 높이 변화는 최대한 완만하게 유지한다.
-- 카드와 댓글 drawer가 공유하는 스타일 토큰과 CSS class 이름
+- 카드 전용 댓글 drawer UI
 - 카드 본체와 댓글 drawer의 책임 분리 방식
 - 목록 카드의 타이포 밀도
 - 목록용 mock data shape
@@ -62,7 +60,7 @@
 mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
 1. `mock.ts`는 도메인 raw mock에서 카드용 projection만 계산한다.
-2. 이미지 유무, 댓글 미리보기 유무 같은 변형은 `mock.scenarios.ts`에서 raw override 후 projection을 다시 계산한다.
+2. 이미지 유무, 댓글 수 같은 변형은 `mock.scenarios.ts`에서 raw override 후 projection을 다시 계산한다.
 3. 목록 레이아웃 검증은 scenario 이름만 보고도 상태를 알 수 있어야 한다.
 
 ## Example
