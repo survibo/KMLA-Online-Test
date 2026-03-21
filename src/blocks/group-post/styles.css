@@ -16,7 +16,7 @@
     margin-inline: auto;
     display: flex;
     width: 100%;
-    max-width: 560px;
+    max-width: 800px;
     flex-direction: column;
     background-color: white;
     border-top-left-radius: var(--group-post-drawer-radius);

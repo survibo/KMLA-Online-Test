@@ -26,7 +26,7 @@ export function ChatRoomList({ data, className }: ChatRoomListProps) {
         <p className="mt-7 text-lg text-zinc-500">{data.subtitle}</p>
       </header>
 
-      <div className="space-y-1 px-2 pb-8">
+      <div className="px-2 pb-8">
         {data.rooms.map((room) => (
           <ChatRoomCard
             key={room.id}

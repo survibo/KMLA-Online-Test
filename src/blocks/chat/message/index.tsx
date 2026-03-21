@@ -144,7 +144,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                   >
                     <div
                       className={cn(
-                        "max-w-full rounded-[1.45rem] px-4 py-2.5 text-left text-[0.98rem] leading-[1.45]",
+                        "max-w-full rounded-[1.45rem] px-3.5 py-2 text-left text-[0.98rem] leading-[1.45]",
                         isOwn && isContinuation && "rounded-tr-md",
                         isOwn && continuesToNext && "rounded-br-md",
                         !isOwn && isContinuation && "rounded-tl-md",
