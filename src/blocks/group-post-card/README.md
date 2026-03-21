@@ -11,6 +11,7 @@
 - 제목
 - 본문 일부
 - 대표 이미지 1장
+- 최신 댓글 1개 미리보기
 - 반응 수와 댓글 수
 
 ## Data Contract
@@ -20,7 +21,8 @@
 현재 기준:
 
 - `post.reaction_count`가 있으면 좋아요 수는 그 값을 우선 사용한다.
-- `post.comment_count`가 있으면 댓글 수는 그 값을 사용한다.
+- `post.comment_count`는 `post.post_comments`의 최상위 댓글 수와 맞춰 유지한다.
+- `post.post_comments`가 있으면 가장 최근 댓글 1개를 카드 안에서 미리 보여줄 수 있다.
 - 대표 이미지는 `post_images.sort_order asc` 기준 첫 번째 항목을 사용한다.
 
 권장:
@@ -34,6 +36,8 @@
 
 - 목록 카드에서 보여줄 정보 범위
 - 대표 이미지 선택 방식
+- 최신 댓글 미리보기 방식
+- 댓글 버튼을 눌렀을 때 여는 댓글 drawer UI
 - 목록 카드의 타이포 밀도
 - 목록용 mock data shape
 
@@ -51,7 +55,7 @@
 mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
 1. `mock.ts`의 base data는 기준 샘플로 유지한다.
-2. 이미지 유무 같은 변형은 `mock.scenarios.ts`에 scenario로 추가한다.
+2. 이미지 유무, 댓글 미리보기 유무 같은 변형은 `mock.scenarios.ts`에 scenario로 추가한다.
 3. 목록 레이아웃 검증은 scenario 이름만 보고도 상태를 알 수 있어야 한다.
 
 ## Example

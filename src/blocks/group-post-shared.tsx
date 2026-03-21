@@ -13,6 +13,7 @@ import {
 
 import type {
   GroupPost,
+  GroupComment,
   GroupPostImage,
   GroupUser,
 } from "./group-post-types"
@@ -103,9 +104,11 @@ export function GroupPostHeader({
 export function GroupPostStats({
   post,
   className,
+  onCommentClick,
 }: {
   post: GroupPost
   className?: string
+  onCommentClick?: () => void
 }) {
   const likes = post.reaction_count ?? post.post_reactions?.length ?? 0
   const comments = post.comment_count ?? 0
@@ -126,10 +129,178 @@ export function GroupPostStats({
         variant="ghost"
         size="sm"
         className="h-8 rounded-full px-2.5 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+        onClick={onCommentClick}
       >
         <MessageCircle className="size-4.5" strokeWidth={2.2} />
         <span className="font-medium">{comments}</span>
       </Button>
+    </div>
+  )
+}
+
+type GroupCommentMeta = {
+  item: GroupComment
+  depth: number
+  replyCount: number
+}
+
+function countDirectReplies(commentItems: GroupComment[], parentId: string) {
+  return commentItems.filter((item) => item.parent_id === parentId).length
+}
+
+export function flattenGroupComments(commentItems: GroupComment[]) {
+  const sortedCommentItems = [...commentItems].sort(
+    (a, b) =>
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+  )
+  const commentMap = new Map(sortedCommentItems.map((item) => [item.id, item]))
+  const childMap = new Map<string | null, GroupComment[]>()
+
+  function getTopLevelParentId(comment: GroupComment) {
+    let currentParentId = comment.parent_id ?? null
+
+    while (currentParentId) {
+      const parentComment = commentMap.get(currentParentId)
+      if (!parentComment?.parent_id) return parentComment?.id ?? currentParentId
+      currentParentId = parentComment.parent_id
+    }
+
+    return null
+  }
+
+  for (const item of sortedCommentItems) {
+    const parentKey = getTopLevelParentId(item)
+    const siblings = childMap.get(parentKey) ?? []
+    siblings.push(item)
+    childMap.set(parentKey, siblings)
+  }
+
+  const flattenedComments: GroupCommentMeta[] = []
+
+  function walkComments(parentId: string | null, actualDepth: number) {
+    const children = childMap.get(parentId) ?? []
+
+    for (const child of children) {
+      const directReplies =
+        child.reply_count ?? countDirectReplies(sortedCommentItems, child.id)
+
+      flattenedComments.push({
+        item: child,
+        depth: Math.min(actualDepth, 1),
+        replyCount: directReplies,
+      })
+
+      walkComments(child.id, actualDepth + 1)
+    }
+  }
+
+  walkComments(null, 0)
+
+  return flattenedComments
+}
+
+export function getLatestGroupComment(commentItems: GroupComment[] = []) {
+  return [...commentItems].sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  )[0] ?? null
+}
+
+function GroupCommentRow({
+  item,
+  depth,
+  replyCount,
+}: GroupCommentMeta) {
+  const likes = item.comment_reactions?.length ?? 0
+  const showReplyCount = depth === 0
+
+  return (
+    <div className={cn("flex gap-2.5", depth > 0 && "ml-5")}>
+      <div className="pt-1">
+        <GroupAvatar author={item.author} size="sm" />
+      </div>
+      <div className="min-w-0 flex-1 space-y-1">
+        <div className="rounded-3xl bg-zinc-100 px-4 py-3">
+          <p className="font-semibold text-zinc-900">{item.author.name}</p>
+          <p className="whitespace-pre-line text-zinc-700">{item.content}</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-1 px-1 text-sm text-zinc-500">
+          <span className="px-2 text-[0.8125rem]">
+            {formatRelativeTime(item.created_at)}
+          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 rounded-full px-2 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+          >
+            <ThumbsUp className="size-4" strokeWidth={2.2} />
+            <span>{likes}</span>
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 rounded-full px-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+          >
+            <MessageCircle className="size-4" strokeWidth={2.2} />
+            {showReplyCount ? <span>{replyCount}</span> : null}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function GroupCommentThread({
+  commentItems = [],
+  className,
+}: {
+  commentItems?: GroupComment[]
+  className?: string
+}) {
+  const flattenedComments = flattenGroupComments(commentItems)
+
+  if (flattenedComments.length === 0) return null
+
+  return (
+    <div className={cn("space-y-5", className)}>
+      {flattenedComments.map(({ item, ...meta }, index) => (
+        <GroupCommentRow
+          key={item.id ?? `${item.author.name}-${index}`}
+          item={item}
+          {...meta}
+        />
+      ))}
+    </div>
+  )
+}
+
+export function GroupLatestCommentPreview({
+  comment,
+  className,
+}: {
+  comment: GroupComment
+  className?: string
+}) {
+  return (
+    <div className={cn("flex gap-2.5 rounded-2xl bg-zinc-50 px-3.5 py-3", className)}>
+      <div className="pt-0.5">
+        <GroupAvatar author={comment.author} size="sm" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2 text-sm">
+          <p className="truncate font-semibold text-zinc-900">
+            {comment.author.name}
+          </p>
+          <span className="shrink-0 text-zinc-400">
+            {formatRelativeTime(comment.created_at)}
+          </span>
+        </div>
+        <p className="mt-1 line-clamp-2 whitespace-pre-line break-keep text-sm text-zinc-600">
+          {comment.content}
+        </p>
+      </div>
     </div>
   )
 }

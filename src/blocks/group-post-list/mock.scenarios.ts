@@ -1,7 +1,7 @@
 import type { GroupPostListGroup } from "./types"
 import {
+  baseGroupPostListPosts,
   createGroupPostListGroup,
-  createGroupPostListPostFromCard,
 } from "./mock"
 
 export type GroupPostListScenario = {
@@ -21,18 +21,9 @@ export const groupPostListDefaultScenario: GroupPostListScenario = {
 export const groupPostListSparseScenario: GroupPostListScenario = {
   id: "sparse",
   label: "게시글 적음",
-  description: "게시글 수가 적은 목록 밀도 확인용 상태",
+  description: "게시글 수가 적은 목록 밀도를 확인하는 상태",
   group: createGroupPostListGroup({
-    posts: [
-      createGroupPostListPostFromCard(
-        "24ba4ff5-0b6d-49cd-8de7-93f7659b92eb",
-        "2026-03-21T00:03:00+09:00"
-      ),
-      createGroupPostListPostFromCard(
-        "712c98eb-e5f8-4f0f-a7df-0fca91e277cb",
-        "2026-03-20T14:55:00+09:00"
-      ),
-    ],
+    posts: baseGroupPostListPosts.slice(0, 2),
   }),
 }
 

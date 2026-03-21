@@ -59,5 +59,6 @@ export type GroupPost = {
   deleted_at?: string | null
   author: GroupUser
   post_images?: GroupPostImage[]
+  post_comments?: GroupComment[]
   post_reactions?: GroupReaction[]
 }

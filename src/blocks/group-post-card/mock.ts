@@ -1,6 +1,12 @@
 import type { GroupPostCardData } from "./types"
 
 const POST_ID = "dfb5a0a2-5ef8-4be2-87d5-3ebc4a2370a1"
+const ROOT_COMMENT_ID = "b741b315-d9c5-4568-bfb8-97a58c48bc79"
+const SECOND_ROOT_COMMENT_ID = "51f7f117-dac0-4c46-94fa-e83617f3d098"
+
+function countTopLevelComments(postComments: GroupPostCardData["post_comments"] = []) {
+  return postComments.filter((comment) => comment.parent_id === null).length
+}
 
 export const baseGroupPostCardPost: GroupPostCardData = {
   id: POST_ID,
@@ -17,7 +23,6 @@ export const baseGroupPostCardPost: GroupPostCardData = {
   title: "민사관 의류장 납품 안내",
   content:
     "안녕하세요. 38대 학생자치회입니다.\n의류장 비용 납품 관련 안내드립니다.",
-  comment_count: 1,
   reaction_count: 3,
   post_images: [
     {
@@ -54,11 +59,147 @@ export const baseGroupPostCardPost: GroupPostCardData = {
       created_at: "2026-03-20T15:03:00+09:00",
     },
   ],
+  post_comments: [
+    {
+      id: ROOT_COMMENT_ID,
+      post_id: POST_ID,
+      author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
+      parent_id: null,
+      author: {
+        id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
+        name: "28기 이주형",
+        img: null,
+      },
+      content: "명단은 오늘 저녁까지 댓글로 남겨 주세요.",
+      reply_count: 1,
+      created_at: "2026-03-20T14:55:00+09:00",
+      updated_at: null,
+      deleted_at: null,
+      comment_reactions: [
+        {
+          id: "7ff70689-b3a7-4e06-a370-c2b7a895633c",
+          comment_id: ROOT_COMMENT_ID,
+          user_id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
+          type: "like",
+          created_at: "2026-03-20T14:57:00+09:00",
+        },
+      ],
+    },
+    {
+      id: "fc53113f-9c62-4e17-934a-845f4a74d1cf",
+      post_id: POST_ID,
+      author_id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
+      parent_id: ROOT_COMMENT_ID,
+      author: {
+        id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
+        name: "28기 박채은",
+        img: null,
+      },
+      content: "사이즈 체크표도 같이 올려 주실 수 있을까요?",
+      reply_count: 0,
+      created_at: "2026-03-20T15:11:00+09:00",
+      updated_at: null,
+      deleted_at: null,
+      comment_reactions: [],
+    },
+  ],
+  comment_count: 1,
 }
+
+export const baseGroupPostCardDiscussionComments: NonNullable<
+  GroupPostCardData["post_comments"]
+> = [
+  {
+    id: ROOT_COMMENT_ID,
+    post_id: POST_ID,
+    author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
+    parent_id: null,
+    author: {
+      id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
+      name: "28기 이주형",
+      img: null,
+    },
+    content: "신청 인원은 오늘 자정 전까지 남겨 주세요.",
+    reply_count: 2,
+    created_at: "2026-03-20T15:08:00+09:00",
+    updated_at: null,
+    deleted_at: null,
+    comment_reactions: [
+      {
+        id: "6f7da723-cda0-4048-a55a-718fe5555a43",
+        comment_id: ROOT_COMMENT_ID,
+        user_id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
+        type: "like",
+        created_at: "2026-03-20T15:09:00+09:00",
+      },
+    ],
+  },
+  {
+    id: "d91ae868-eafd-4cc4-a992-9353455e4d59",
+    post_id: POST_ID,
+    author_id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
+    parent_id: ROOT_COMMENT_ID,
+    author: {
+      id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
+      name: "28기 박채은",
+      img: null,
+    },
+    content: "사이즈별 재고도 같이 열리나요?",
+    reply_count: 0,
+    created_at: "2026-03-20T15:10:00+09:00",
+    updated_at: null,
+    deleted_at: null,
+    comment_reactions: [],
+  },
+  {
+    id: "404df588-c819-4491-949f-8cb089545927",
+    post_id: POST_ID,
+    author_id: "77709928-52dc-4f5f-ae81-dc18edb641e6",
+    parent_id: ROOT_COMMENT_ID,
+    author: {
+      id: "77709928-52dc-4f5f-ae81-dc18edb641e6",
+      name: "29기 김서윤",
+      img: null,
+    },
+    content: "현장 수령 날짜도 이번 주 안에 알려주시면 좋겠습니다.",
+    reply_count: 0,
+    created_at: "2026-03-20T15:14:00+09:00",
+    updated_at: null,
+    deleted_at: null,
+    comment_reactions: [],
+  },
+  {
+    id: SECOND_ROOT_COMMENT_ID,
+    post_id: POST_ID,
+    author_id: "0859f193-a0f4-4eeb-b4dc-a3bc69980c49",
+    parent_id: null,
+    author: {
+      id: "0859f193-a0f4-4eeb-b4dc-a3bc69980c49",
+      name: "30기 정수민",
+      img: null,
+    },
+    content: "추가 신청 폼이 열리면 공지로 다시 올려 주세요.",
+    reply_count: 0,
+    created_at: "2026-03-20T15:18:00+09:00",
+    updated_at: null,
+    deleted_at: null,
+    comment_reactions: [],
+  },
+]
 
 export function createGroupPostCardPost(
   overrides: Partial<GroupPostCardData> = {}
 ): GroupPostCardData {
+  const postComments = (
+    overrides.post_comments ?? baseGroupPostCardPost.post_comments
+  )?.map((comment) => ({
+    ...comment,
+    author: { ...comment.author },
+    comment_reactions: comment.comment_reactions?.map((reaction) => ({
+      ...reaction,
+    })),
+  }))
+
   return {
     ...baseGroupPostCardPost,
     ...overrides,
@@ -69,5 +210,7 @@ export function createGroupPostCardPost(
     post_reactions: (
       overrides.post_reactions ?? baseGroupPostCardPost.post_reactions
     )?.map((reaction) => ({ ...reaction })),
+    post_comments: postComments,
+    comment_count: overrides.comment_count ?? countTopLevelComments(postComments),
   }
 }
