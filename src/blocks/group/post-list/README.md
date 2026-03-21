@@ -5,6 +5,7 @@
 `GroupPostList`는 특정 그룹 안의 게시글 목록 화면 레이아웃을 담당하는 block이다.
 
 이 block은 그룹 헤더와 목록 컨테이너를 담당하고, 실제 게시글 내용은 기존 `GroupPostCard`를 그대로 사용한다.
+필요하면 상단에 선택형 모드 버튼도 함께 렌더링할 수 있다.
 
 ## Data Contract
 
@@ -18,14 +19,16 @@
 - 그룹 필드는 `groups` 스키마를 따라 `name`, `description`, `is_official`, `is_personal`, `created_at`를 유지한다.
 - 그룹 안의 각 게시글은 `GroupPostCard`로 렌더링한다.
 - 이 block은 게시글 내부 형식을 다시 정의하지 않는다.
-- 목록 mock은 `src/blocks/group-post/mock.ts`의 raw group/post 데이터를 source of truth로 사용한다.
+- 목록 mock은 `src/blocks/group/mock.ts`의 raw group/post 데이터를 source of truth로 사용한다.
 - 따라서 목록은 card mock을 복제하지 않고, 같은 raw post를 목록용으로 projection한다.
+- `modes`, `activeModeId`, `postModeById`는 목록 헤더용 UI 상태이므로 block projection에서만 선택적으로 추가한다.
 
 ## Rendering Rules
 
 이 block의 로컬 규칙은 아래와 같다.
 
 - 상단 헤더는 그룹 제목과 주요 액션만 보여준다.
+- 필요할 때만 헤더 아래에 모드 버튼 줄을 추가한다.
 - 목록 본문은 카드 컴포넌트를 그대로 세로로 쌓는다.
 - 이 block은 "목록 껍데기" 역할까지만 맡는다.
 
@@ -42,15 +45,15 @@
 mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
 1. `mock.ts`는 도메인 raw mock에서 목록용 group/post projection만 계산한다.
-2. 목록 길이나 밀도 실험은 `mock.scenarios.ts`에서 raw override 후 projection을 다시 계산한다.
+2. 목록 길이나 밀도, 모드 버튼 유무 실험은 `mock.scenarios.ts`에서 raw override 후 projection을 다시 계산한다.
 3. 카드 구조가 바뀌더라도 목록 mock은 복제가 아니라 같은 raw post를 읽도록 유지한다.
 4. preview에서 볼 케이스는 `active...Scenario` 하나만 고르면 되게 유지한다.
 
 ## Example
 
 ```tsx
-import { GroupPostList } from "@/blocks/group-post/list"
-import { activeGroupPostListScenario } from "@/blocks/group-post/list/mock.scenarios"
+import { GroupPostList } from "@/blocks/group/post-list"
+import { activeGroupPostListScenario } from "@/blocks/group/post-list/mock.scenarios"
 
 export function Example() {
   return <GroupPostList group={activeGroupPostListScenario.group} />

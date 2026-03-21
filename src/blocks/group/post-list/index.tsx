@@ -1,6 +1,6 @@
 import { ArrowLeft, ChevronDown, Plus, Search } from "lucide-react"
 
-import { GroupPostCard } from "@/blocks/group-post/card"
+import { GroupPostCard } from "@/blocks/group/post-card"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,6 +18,15 @@ type GroupPostListProps = {
 }
 
 export function GroupPostList({ group, className }: GroupPostListProps) {
+  const hasModes = Boolean(group.modes?.length && group.activeModeId)
+  const posts = hasModes
+    ? group.posts.filter(
+        (post) =>
+          (group.postModeById?.[post.id] ?? group.activeModeId) ===
+          group.activeModeId
+      )
+    : group.posts
+
   return (
     <section className={cn("min-h-screen bg-white text-zinc-950", className)}>
       <header className="sticky top-0 z-10 border-b border-zinc-200/80 bg-white/95 backdrop-blur-sm">
@@ -38,6 +47,30 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
               </h1>
             </div>
           </div>
+
+          {hasModes ? (
+            <div className="mt-3 flex items-center gap-2.5">
+              {group.modes?.map((mode) => {
+                const isActive = mode.id === group.activeModeId
+
+                return (
+                  <Button
+                    key={mode.id}
+                    type="button"
+                    className={cn(
+                      "h-10 rounded-full border px-5 text-sm font-semibold shadow-none transition-colors",
+                      isActive
+                        ? "border-emerald-300 bg-emerald-300 text-white hover:bg-emerald-400"
+                        : "border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-50"
+                    )}
+                    aria-pressed={isActive}
+                  >
+                    {mode.label}
+                  </Button>
+                )
+              })}
+            </div>
+          ) : null}
 
           <div className="mt-3 flex items-center gap-2.5">
             <div className="relative min-w-0 flex-1">
@@ -74,7 +107,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
       </header>
 
       <div>
-        {group.posts.map((post) => (
+        {posts.map((post) => (
           <GroupPostCard
             key={post.id}
             post={post}

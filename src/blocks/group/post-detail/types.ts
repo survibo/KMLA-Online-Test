@@ -1,7 +1,7 @@
 import type {
   GroupComment,
   GroupPost,
-} from "@/blocks/group-post/types"
+} from "@/blocks/group/types"
 
 export type GroupPostDetailData = GroupPost
 export type GroupPostDetailCommentData = GroupComment

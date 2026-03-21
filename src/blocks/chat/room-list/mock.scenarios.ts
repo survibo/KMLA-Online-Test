@@ -64,10 +64,9 @@ export const chatRoomListQuietScenario = createChatRoomListScenario({
 
 export const chatRoomListScenarios: ChatRoomListScenario[] = [
   chatRoomListDefaultScenario,
-  chatRoomListQuietScenario,
 ]
 
-export const activeChatRoomListScenarioIndex = 0 // 0 ~ 1, total 2 scenarios
+export const activeChatRoomListScenarioIndex = 0 // 0 ~ 0, total 1 scenario
 
 export const activeChatRoomListScenario =
   chatRoomListScenarios[activeChatRoomListScenarioIndex]

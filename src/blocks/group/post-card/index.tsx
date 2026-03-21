@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { MessageCircle, ThumbsUp } from "lucide-react"
+import { MessageCircle, Share2, ThumbsUp } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -10,7 +10,7 @@ import type {
   GroupPost,
   GroupPostImage,
   GroupUser,
-} from "@/blocks/group-post/types"
+} from "@/blocks/group/types"
 
 import { GroupPostCommentsDrawer } from "./comments-drawer"
 
@@ -176,6 +176,15 @@ function GroupPostCardStats({
         <MessageCircle className="size-5" strokeWidth={2.2} />
         <span className="font-medium">{comments}</span>
       </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="h-10 justify-start gap-1 px-2 py-0 text-[0.95rem] text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 [&_svg]:size-5.5"
+        aria-label="Share post"
+      >
+        <Share2 className="size-5" strokeWidth={2.2} />
+      </Button>
     </div>
   )
 }
@@ -246,6 +255,7 @@ export function GroupPostCard({
         open={isCommentsOpen}
         onOpenChange={setIsCommentsOpen}
         commentItems={commentItems}
+        postAuthorId={post.author_id}
       />
     </>
   )

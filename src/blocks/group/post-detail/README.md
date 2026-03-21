@@ -66,7 +66,7 @@
 
 mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
-1. `mock.ts`는 `src/blocks/group-post/mock.ts`의 raw mock을 상세 props로 projection하는 역할에 집중한다.
+1. `mock.ts`는 `src/blocks/group/mock.ts`의 raw mock을 상세 props로 projection하는 역할에 집중한다.
 2. 실험 케이스는 `mock.scenarios.ts`에 별도 scenario로 추가한다.
 3. 새 시나리오는 무엇을 검증하려는지 `label`과 `description`으로 드러낸다.
 4. 렌더링 fallback을 시험할 때만 count 캐시를 의도적으로 비운다.
@@ -78,8 +78,8 @@ mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 ```tsx
 import {
   activeGroupPostDetailScenario,
-} from "@/blocks/group-post/detail/mock.scenarios"
-import { GroupPostDetail } from "@/blocks/group-post/detail"
+} from "@/blocks/group/post-detail/mock.scenarios"
+import { GroupPostDetail } from "@/blocks/group/post-detail"
 
 export function Example() {
   return (

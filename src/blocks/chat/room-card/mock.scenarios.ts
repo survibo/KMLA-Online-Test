@@ -85,10 +85,9 @@ export const chatRoomCardEditedPreviewScenario = createChatRoomCardScenario({
 export const chatRoomCardScenarios: ChatRoomCardScenario[] = [
   chatRoomCardDefaultScenario,
   chatRoomCardReadScenario,
-  chatRoomCardEditedPreviewScenario,
 ]
 
-export const activeChatRoomCardScenarioIndex = 0 // 0 ~ 2, total 3 scenarios
+export const activeChatRoomCardScenarioIndex = 0 // 0 ~ 1, total 2 scenarios
 
 export const activeChatRoomCardScenario =
   chatRoomCardScenarios[activeChatRoomCardScenarioIndex]

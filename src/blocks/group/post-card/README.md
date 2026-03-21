@@ -22,9 +22,9 @@
 
 - `post.reaction_count`가 있으면 좋아요 수는 그 값을 우선 사용한다.
 - `post.comment_count`는 `post.post_comments`의 최상위 댓글 수와 맞춰 유지한다.
-- `post.post_comments`가 있으면 가장 최근 댓글 1개를 카드 안에서 미리 보여줄 수 있다.
+- `post.post_comments`는 drawer용 전체 댓글을 유지하고, 카드 안의 최신 댓글 1개 미리보기는 렌더링 단계에서 계산한다.
 - 대표 이미지는 `post_images.sort_order asc` 기준 첫 번째 항목을 사용한다.
-- block mock은 `src/blocks/group-post/mock.ts`의 raw post/comment/reaction을 source of truth로 사용한다.
+- block mock은 `src/blocks/group/mock.ts`의 raw post/comment/reaction을 source of truth로 사용한다.
 
 권장:
 
@@ -39,6 +39,7 @@
 - 대표 이미지 선택 방식
 - 최신 댓글 미리보기 방식
 - 댓글 버튼을 눌렀을 때 여는 댓글 drawer UI
+- 댓글 drawer에서 답글을 기본 접기 상태로 둘지와 `답글 보기` 토글 방식
 - 카드와 댓글 drawer가 공유하는 스타일 토큰과 CSS class 이름
 - 카드 본체와 댓글 drawer의 책임 분리 방식
 - 목록 카드의 타이포 밀도
@@ -53,7 +54,7 @@
 - `mock.ts`: 기준이 되는 base mock과 생성 helper
 - `mock.scenarios.ts`: 이미지 유무 같은 실험용 시나리오 mock
 - `types.ts`: 목록 카드용 타입 alias
-- `../types.ts`: group post 공용 타입
+- `../types.ts`: group 공용 타입
 
 ## Mock Workflow
 
@@ -66,10 +67,10 @@ mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 ## Example
 
 ```tsx
-import { GroupPostCard } from "@/blocks/group-post/card"
+import { GroupPostCard } from "@/blocks/group/post-card"
 import {
   activeGroupPostCardScenario,
-} from "@/blocks/group-post/card/mock.scenarios"
+} from "@/blocks/group/post-card/mock.scenarios"
 
 export function Example() {
   return <GroupPostCard post={activeGroupPostCardScenario.post} />

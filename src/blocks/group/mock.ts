@@ -369,7 +369,7 @@ function findUser(users: GroupUser[], userId: string) {
   const user = users.find((item) => item.id === userId)
 
   if (!user) {
-    throw new Error(`Missing group-post user for ${userId}`)
+    throw new Error(`Missing group user for ${userId}`)
   }
 
   return user
@@ -379,7 +379,7 @@ function findGroup(groups: GroupRecord[], groupId: string) {
   const group = groups.find((item) => item.id === groupId)
 
   if (!group) {
-    throw new Error(`Missing group-post group for ${groupId}`)
+    throw new Error(`Missing group for ${groupId}`)
   }
 
   return group
@@ -415,7 +415,7 @@ export function getGroupPostById(
   const post = data.posts.find((item) => item.id === postId && !item.deleted_at)
 
   if (!post) {
-    throw new Error(`Missing group-post post for ${postId}`)
+    throw new Error(`Missing group post for ${postId}`)
   }
 
   return {

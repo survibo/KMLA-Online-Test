@@ -5,7 +5,7 @@ import {
   getGroupPostById,
   getGroupPostComments,
   type GroupPostMockData,
-} from "@/blocks/group-post/mock"
+} from "@/blocks/group/mock"
 
 import type {
   GroupPostDetailCommentData,

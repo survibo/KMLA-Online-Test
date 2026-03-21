@@ -11,12 +11,12 @@ import { ChatRoom } from "@/blocks/chat/room"
 import { chatRoomScenarios } from "@/blocks/chat/room/mock.scenarios"
 import { ChatRoomList } from "@/blocks/chat/room-list"
 import { chatRoomListScenarios } from "@/blocks/chat/room-list/mock.scenarios"
-import { GroupPostCard } from "@/blocks/group-post/card"
-import { groupPostCardScenarios } from "@/blocks/group-post/card/mock.scenarios"
-import { GroupPostDetail } from "@/blocks/group-post/detail"
-import { groupPostDetailScenarios } from "@/blocks/group-post/detail/mock.scenarios"
-import { GroupPostList } from "@/blocks/group-post/list"
-import { groupPostListScenarios } from "@/blocks/group-post/list/mock.scenarios"
+import { GroupPostCard } from "@/blocks/group/post-card"
+import { groupPostCardScenarios } from "@/blocks/group/post-card/mock.scenarios"
+import { GroupPostDetail } from "@/blocks/group/post-detail"
+import { groupPostDetailScenarios } from "@/blocks/group/post-detail/mock.scenarios"
+import { GroupPostList } from "@/blocks/group/post-list"
+import { groupPostListScenarios } from "@/blocks/group/post-list/mock.scenarios"
 import { Button } from "@/components/ui/button"
 
 const scenarioGroups = [
@@ -58,15 +58,15 @@ const scenarioGroups = [
     render: (scenario) => <ChatRoom data={scenario.data} />,
   },
   {
-    domain: "group-post",
-    id: "card",
+    domain: "group",
+    id: "post-card",
     label: "Group Post Card",
     scenarios: groupPostCardScenarios,
     render: (scenario) => <GroupPostCard post={scenario.post} />,
   },
   {
-    domain: "group-post",
-    id: "detail",
+    domain: "group",
+    id: "post-detail",
     label: "Group Post Detail",
     scenarios: groupPostDetailScenarios,
     render: (scenario) => (
@@ -77,8 +77,8 @@ const scenarioGroups = [
     ),
   },
   {
-    domain: "group-post",
-    id: "list",
+    domain: "group",
+    id: "post-list",
     label: "Group Post List",
     scenarios: groupPostListScenarios,
     render: (scenario) => <GroupPostList group={scenario.group} />,
@@ -91,8 +91,8 @@ const scenarioDomains = [
     label: "Chat",
   },
   {
-    id: "group-post",
-    label: "Group Post",
+    id: "group",
+    label: "Group",
   },
 ]
 

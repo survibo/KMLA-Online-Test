@@ -17,7 +17,7 @@ import type {
   GroupPost,
   GroupPostImage,
   GroupUser,
-} from "@/blocks/group-post/types"
+} from "@/blocks/group/types"
 
 type GroupPostDetailProps = {
   post: GroupPost
@@ -195,6 +195,31 @@ type GroupCommentMeta = {
   parentAuthorName: string | null
 }
 
+type GroupCommentRowProps = GroupCommentMeta & {
+  postAuthorId?: string
+}
+
+function getParentAuthorName(
+  comment: GroupComment,
+  commentMap: Map<string, GroupComment>
+) {
+  if (!comment.parent_id || comment.parent_id === comment.id) {
+    return null
+  }
+
+  const parentComment = commentMap.get(comment.parent_id)
+
+  if (!parentComment || parentComment.id === comment.id) {
+    return null
+  }
+
+  if (parentComment.author.id === comment.author.id) {
+    return null
+  }
+
+  return parentComment.author.name
+}
+
 function countDirectReplies(commentItems: GroupComment[], parentId: string) {
   return commentItems.filter((item) => item.parent_id === parentId).length
 }
@@ -237,9 +262,7 @@ function flattenGroupComments(commentItems: GroupComment[]) {
         depth: Math.min(actualDepth, 1),
         replyCount:
           child.reply_count ?? countDirectReplies(sortedCommentItems, child.id),
-        parentAuthorName: child.parent_id
-          ? commentMap.get(child.parent_id)?.author.name ?? null
-          : null,
+        parentAuthorName: getParentAuthorName(child, commentMap),
       })
 
       walkComments(child.id, actualDepth + 1)
@@ -256,7 +279,10 @@ function GroupCommentRow({
   depth,
   replyCount,
   parentAuthorName,
-}: GroupCommentMeta) {
+  postAuthorId,
+}: GroupCommentRowProps) {
+  const isPostAuthor = item.author_id === postAuthorId
+
   return (
     <div className={cn("flex gap-2.5", depth > 0 && "ml-7")}>
       <div className="pt-1">
@@ -266,6 +292,11 @@ function GroupCommentRow({
         <div className="py-0.5">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
             <p className="font-semibold text-zinc-900">{item.author.name}</p>
+            {isPostAuthor ? (
+              <span className="text-[0.8125rem] font-medium text-zinc-400">
+                작성자
+              </span>
+            ) : null}
             <span className="text-[0.8125rem] text-zinc-400">
               {formatRelativeTime(item.created_at)}
             </span>
@@ -273,7 +304,7 @@ function GroupCommentRow({
           <p className="mt-0.5 whitespace-pre-line text-zinc-700">
             {parentAuthorName ? (
               <span className="mr-1.5 font-medium text-sky-700">
-                {parentAuthorName}
+                @{parentAuthorName}
               </span>
             ) : null}
             {item.content}
@@ -306,8 +337,10 @@ function GroupCommentRow({
 
 function GroupCommentThread({
   commentItems = [],
+  postAuthorId,
 }: {
   commentItems?: GroupComment[]
+  postAuthorId?: string
 }) {
   const flattenedComments = flattenGroupComments(commentItems)
 
@@ -319,6 +352,7 @@ function GroupCommentThread({
         <GroupCommentRow
           key={item.id ?? `${item.author.name}-${index}`}
           item={item}
+          postAuthorId={postAuthorId}
           {...meta}
         />
       ))}
@@ -365,7 +399,10 @@ export function GroupPostDetail({
             {commentItems.length > 0 ? (
               <div className="flex flex-col gap-5">
                 <Separator className="bg-zinc-200" />
-                <GroupCommentThread commentItems={commentItems} />
+                <GroupCommentThread
+                  commentItems={commentItems}
+                  postAuthorId={post.author_id}
+                />
               </div>
             ) : null}
           </CardContent>

@@ -13,12 +13,13 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
-import type { GroupComment, GroupUser } from "@/blocks/group-post/types"
+import type { GroupComment, GroupUser } from "@/blocks/group/types"
 
 type GroupPostCommentsDrawerProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   commentItems?: GroupComment[]
+  postAuthorId?: string
 }
 
 function getInitials(name: string) {
@@ -56,6 +57,31 @@ type GroupCommentMeta = {
   parentAuthorName: string | null
 }
 
+type GroupCommentRowProps = GroupCommentMeta & {
+  postAuthorId?: string
+}
+
+function getParentAuthorName(
+  comment: GroupComment,
+  commentMap: Map<string, GroupComment>
+) {
+  if (!comment.parent_id || comment.parent_id === comment.id) {
+    return null
+  }
+
+  const parentComment = commentMap.get(comment.parent_id)
+
+  if (!parentComment || parentComment.id === comment.id) {
+    return null
+  }
+
+  if (parentComment.author.id === comment.author.id) {
+    return null
+  }
+
+  return parentComment.author.name
+}
+
 function countDirectReplies(commentItems: GroupComment[], parentId: string) {
   return commentItems.filter((item) => item.parent_id === parentId).length
 }
@@ -66,50 +92,34 @@ function flattenGroupComments(commentItems: GroupComment[]) {
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
   )
   const commentMap = new Map(sortedCommentItems.map((item) => [item.id, item]))
-  const childMap = new Map<string | null, GroupComment[]>()
+  const rootComments = sortedCommentItems.filter((item) => item.parent_id === null)
 
-  function getTopLevelParentId(comment: GroupComment) {
-    let currentParentId = comment.parent_id ?? null
+  return rootComments.map((item) => ({
+    item,
+    depth: 0,
+    replyCount: item.reply_count ?? countDirectReplies(sortedCommentItems, item.id),
+    parentAuthorName: null,
+  }))
+}
 
-    while (currentParentId) {
-      const parentComment = commentMap.get(currentParentId)
-      if (!parentComment?.parent_id) return parentComment?.id ?? currentParentId
-      currentParentId = parentComment.parent_id
-    }
+function getDirectReplies(
+  commentItems: GroupComment[],
+  parentId: string
+): GroupCommentMeta[] {
+  const sortedCommentItems = [...commentItems].sort(
+    (a, b) =>
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+  )
+  const commentMap = new Map(sortedCommentItems.map((item) => [item.id, item]))
 
-    return null
-  }
-
-  for (const item of sortedCommentItems) {
-    const parentKey = getTopLevelParentId(item)
-    const siblings = childMap.get(parentKey) ?? []
-    siblings.push(item)
-    childMap.set(parentKey, siblings)
-  }
-
-  const flattenedComments: GroupCommentMeta[] = []
-
-  function walkComments(parentId: string | null, actualDepth: number) {
-    const children = childMap.get(parentId) ?? []
-
-    for (const child of children) {
-      flattenedComments.push({
-        item: child,
-        depth: Math.min(actualDepth, 1),
-        replyCount:
-          child.reply_count ?? countDirectReplies(sortedCommentItems, child.id),
-        parentAuthorName: child.parent_id
-          ? commentMap.get(child.parent_id)?.author.name ?? null
-          : null,
-      })
-
-      walkComments(child.id, actualDepth + 1)
-    }
-  }
-
-  walkComments(null, 0)
-
-  return flattenedComments
+  return sortedCommentItems
+    .filter((item) => item.parent_id === parentId)
+    .map((item) => ({
+      item,
+      depth: 1,
+      replyCount: item.reply_count ?? countDirectReplies(sortedCommentItems, item.id),
+      parentAuthorName: getParentAuthorName(item, commentMap),
+    }))
 }
 
 function GroupCommentRow({
@@ -117,8 +127,10 @@ function GroupCommentRow({
   depth,
   replyCount,
   parentAuthorName,
-}: GroupCommentMeta) {
+  postAuthorId,
+}: GroupCommentRowProps) {
   const likes = item.comment_reactions?.length ?? 0
+  const isPostAuthor = item.author_id === postAuthorId
 
   return (
     <div className={cn("flex gap-2.5", depth > 0 && "ml-7")}>
@@ -129,6 +141,11 @@ function GroupCommentRow({
         <div className="py-0.5">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
             <p className="font-semibold text-zinc-900">{item.author.name}</p>
+            {isPostAuthor ? (
+              <span className="text-[0.8125rem] font-medium text-zinc-400">
+                작성자
+              </span>
+            ) : null}
             <span className="text-[0.8125rem] text-zinc-400">
               {formatRelativeTime(item.created_at)}
             </span>
@@ -136,7 +153,7 @@ function GroupCommentRow({
           <p className="mt-0.5 whitespace-pre-line text-zinc-700">
             {parentAuthorName ? (
               <span className="mr-1.5 font-medium text-sky-700">
-                {parentAuthorName}
+                @{parentAuthorName}
               </span>
             ) : null}
             {item.content}
@@ -167,24 +184,98 @@ function GroupCommentRow({
   )
 }
 
+function GroupReplyToggle({
+  replyCount,
+  expanded,
+  onToggle,
+}: {
+  replyCount: number
+  expanded: boolean
+  onToggle: () => void
+}) {
+  if (replyCount <= 0) {
+    return null
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      className="mt-1 h-7 px-0 text-sm font-medium text-zinc-500 hover:bg-transparent hover:text-zinc-700"
+      onClick={onToggle}
+    >
+      {expanded ? "답글 숨기기" : `답글 보기 ${replyCount}`}
+    </Button>
+  )
+}
+
 function GroupCommentThread({
   commentItems = [],
+  postAuthorId,
 }: {
   commentItems?: GroupComment[]
+  postAuthorId?: string
 }) {
   const flattenedComments = flattenGroupComments(commentItems)
+  const [expandedCommentIds, setExpandedCommentIds] = useState<string[]>([])
 
   if (flattenedComments.length === 0) return null
 
+  function toggleReplies(commentId: string) {
+    setExpandedCommentIds((currentIds) =>
+      currentIds.includes(commentId)
+        ? currentIds.filter((id) => id !== commentId)
+        : [...currentIds, commentId]
+    )
+  }
+
   return (
     <div className="flex flex-col gap-5">
-      {flattenedComments.map(({ item, ...meta }, index) => (
-        <GroupCommentRow
-          key={item.id ?? `${item.author.name}-${index}`}
-          item={item}
-          {...meta}
-        />
-      ))}
+      {flattenedComments.map(({ item, ...meta }, index) => {
+        const isExpanded = expandedCommentIds.includes(item.id)
+        const directReplies = getDirectReplies(commentItems, item.id)
+
+        return (
+          <div key={item.id ?? `${item.author.name}-${index}`}>
+            <GroupCommentRow
+              item={item}
+              postAuthorId={postAuthorId}
+              {...meta}
+            />
+            <GroupReplyToggle
+              replyCount={meta.replyCount}
+              expanded={isExpanded}
+              onToggle={() => toggleReplies(item.id)}
+            />
+            {directReplies.length > 0 ? (
+              <div
+                className={cn(
+                  "grid transition-[grid-template-rows,opacity,transform] duration-250 ease-out",
+                  isExpanded
+                    ? "mt-3 grid-rows-[1fr] opacity-100 translate-y-0"
+                    : "grid-rows-[0fr] opacity-0 -translate-y-1"
+                )}
+              >
+                <div className="overflow-hidden">
+                  <div className="flex flex-col gap-5 pt-0.5">
+                    {directReplies.map(
+                      ({ item: replyItem, ...replyMeta }, replyIndex) => (
+                        <GroupCommentRow
+                          key={replyItem.id ?? `${replyItem.author.name}-${replyIndex}`}
+                          item={replyItem}
+                          postAuthorId={postAuthorId}
+                          {...replyMeta}
+                        />
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -193,6 +284,7 @@ export function GroupPostCommentsDrawer({
   open,
   onOpenChange,
   commentItems = [],
+  postAuthorId,
 }: GroupPostCommentsDrawerProps) {
   const composerRef = useRef<HTMLDivElement | null>(null)
   const [draftComment, setDraftComment] = useState("")
@@ -213,7 +305,10 @@ export function GroupPostCommentsDrawer({
 
         <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6">
           {commentItems.length > 0 ? (
-            <GroupCommentThread commentItems={commentItems} />
+            <GroupCommentThread
+              commentItems={commentItems}
+              postAuthorId={postAuthorId}
+            />
           ) : (
             <div className="rounded-2xl bg-zinc-50 px-4 py-6 text-center text-sm text-zinc-500">
               아직 댓글이 없습니다. 첫 댓글을 남겨보세요.
