@@ -103,11 +103,13 @@ function GroupPostCardGallery({
   )
 }
 
-function getLatestGroupComment(commentItems: GroupComment[] = []) {
-  return [...commentItems].sort(
+function getLatestTopLevelGroupComment(commentItems: GroupComment[] = []) {
+  return commentItems
+    .filter((comment) => comment.parent_id === null)
+    .sort(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  )[0] ?? null
+    )[0] ?? null
 }
 
 function GroupLatestCommentPreview({
@@ -196,7 +198,7 @@ export function GroupPostCard({
 }: GroupPostCardProps) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false)
   const commentItems = post.post_comments ?? []
-  const latestComment = getLatestGroupComment(commentItems)
+  const latestComment = getLatestTopLevelGroupComment(commentItems)
 
   return (
     <>

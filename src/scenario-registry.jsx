@@ -1,0 +1,111 @@
+import { ChatMessage } from "@/blocks/chat/message"
+import { chatMessageScenarios } from "@/blocks/chat/message/mock.scenarios"
+import { ChatRoom } from "@/blocks/chat/room"
+import { chatRoomScenarios } from "@/blocks/chat/room/mock.scenarios"
+import { ChatRoomCard } from "@/blocks/chat/room-card"
+import {
+  baseChatRoomCardCurrentUserId,
+} from "@/blocks/chat/room-card/mock"
+import { chatRoomCardScenarios } from "@/blocks/chat/room-card/mock.scenarios"
+import { ChatRoomList } from "@/blocks/chat/room-list"
+import { chatRoomListScenarios } from "@/blocks/chat/room-list/mock.scenarios"
+import { GroupPostCard } from "@/blocks/group/post-card"
+import { groupPostCardScenarios } from "@/blocks/group/post-card/mock.scenarios"
+import { GroupPostDetail } from "@/blocks/group/post-detail"
+import { groupPostDetailScenarios } from "@/blocks/group/post-detail/mock.scenarios"
+import { GroupPostList } from "@/blocks/group/post-list"
+import { groupPostListScenarios } from "@/blocks/group/post-list/mock.scenarios"
+
+export const scenarioGroups = [
+  {
+    domain: "chat",
+    id: "room-card",
+    label: "Chat Room Card",
+    scenarios: chatRoomCardScenarios,
+    render: (scenario) => (
+      <div className="min-h-screen bg-white px-4 py-8 sm:px-6">
+        <div className="mx-auto max-w-xl">
+          <ChatRoomCard
+            room={scenario.room}
+            currentUserId={scenario.currentUserId ?? baseChatRoomCardCurrentUserId}
+          />
+        </div>
+      </div>
+    ),
+  },
+  {
+    domain: "chat",
+    id: "room-list",
+    label: "Chat Room List",
+    scenarios: chatRoomListScenarios,
+    render: (scenario) => <ChatRoomList data={scenario.data} />,
+  },
+  {
+    domain: "chat",
+    id: "message",
+    label: "Chat Message",
+    scenarios: chatMessageScenarios,
+    render: (scenario) => <ChatMessage data={scenario.data} />,
+  },
+  {
+    domain: "chat",
+    id: "room",
+    label: "Chat Room",
+    scenarios: chatRoomScenarios,
+    render: (scenario) => <ChatRoom data={scenario.data} />,
+  },
+  {
+    domain: "group",
+    id: "post-card",
+    label: "Group Post Card",
+    scenarios: groupPostCardScenarios,
+    render: (scenario) => <GroupPostCard post={scenario.post} />,
+  },
+  {
+    domain: "group",
+    id: "post-detail",
+    label: "Group Post Detail",
+    scenarios: groupPostDetailScenarios,
+    render: (scenario) => (
+      <GroupPostDetail
+        post={scenario.post}
+        commentItems={scenario.commentItems}
+      />
+    ),
+  },
+  {
+    domain: "group",
+    id: "post-list",
+    label: "Group Post List",
+    scenarios: groupPostListScenarios,
+    render: (scenario) => <GroupPostList group={scenario.group} />,
+  },
+]
+
+export const scenarioDomains = [
+  {
+    id: "chat",
+    label: "Chat",
+  },
+  {
+    id: "group",
+    label: "Group",
+  },
+]
+
+export function getScenarioDomain(domainId) {
+  return scenarioDomains.find((domain) => domain.id === domainId) ?? null
+}
+
+export function getScenarioGroupsByDomain(domainId) {
+  return scenarioGroups.filter((scenarioGroup) => scenarioGroup.domain === domainId)
+}
+
+export function getScenarioGroup(domainId, groupId) {
+  return (
+    scenarioGroups.find(
+      (scenarioGroup) =>
+        scenarioGroup.domain === domainId && scenarioGroup.id === groupId
+    ) ?? null
+  )
+}

@@ -1,7 +1,7 @@
-import { ScenarioPreview } from "./ScenarioPreview"
+import { AppRouter } from "./routes"
 
 function App() {
-  return <ScenarioPreview />
+  return <AppRouter />
 }
 
 export default App

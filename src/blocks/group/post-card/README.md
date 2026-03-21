@@ -22,7 +22,7 @@
 
 - `post.reaction_count`가 있으면 좋아요 수는 그 값을 우선 사용한다.
 - `post.comment_count`는 `post.post_comments`의 최상위 댓글 수와 맞춰 유지한다.
-- `post.post_comments`는 drawer용 전체 댓글을 유지하고, 카드 안의 최신 댓글 1개 미리보기는 렌더링 단계에서 계산한다.
+- `post.post_comments`는 drawer용 전체 댓글을 유지하고, 카드 안의 최신 댓글 1개 미리보기는 최상위 댓글만 대상으로 렌더링 단계에서 계산한다.
 - 대표 이미지는 `post_images.sort_order asc` 기준 첫 번째 항목을 사용한다.
 - block mock은 `src/blocks/group/mock.ts`의 raw post/comment/reaction을 source of truth로 사용한다.
 
