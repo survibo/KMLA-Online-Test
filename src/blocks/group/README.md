@@ -20,6 +20,7 @@
 - 여러 block이 같은 post/comment를 공유하므로 도메인 루트 `mock.ts`를 raw data source of truth로 사용한다.
 - post-card/post-detail/post-list block의 `mock.ts`는 raw mock을 block props 형태로 projection하는 역할에 집중한다.
 - post-card 기준으로 재사용 가능한 post UI는 `shared.tsx`로 올리고, block 전용 표현만 각 block 내부에 둔다.
+- 여러 block이 같은 댓글 트리 계산을 공유하면 도메인 루트 helper로 올려서 정렬/맵/카운트 경로를 한 곳에 둔다.
 - 공용 타입이나 raw mock 구조가 바뀌면 이를 사용하는 post-card/post-detail/post-list block도 함께 점검한다.
 - 도메인 안의 개별 block은 각 폴더에서 `index.tsx`, `mock.ts`, `mock.scenarios.ts`, `types.ts`, `README.md`를 기본 단위로 유지한다.
 - 라이트/다크 모드를 함께 고려해야 하는 surface/border는 `background`, `muted`, `border` 같은 의미 토큰을 우선 사용한다.

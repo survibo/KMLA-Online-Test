@@ -29,7 +29,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
 
   return (
     <section className={cn("min-h-screen bg-background text-foreground", className)}>
-      <header className="sticky top-0 z-10 border-b border-border/80 bg-background/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-10 border-b border-border/60 bg-card/95 shadow-[0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-sm">
         <div className="px-4 py-3 sm:px-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
@@ -61,7 +61,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
                       "h-10 rounded-full border px-5 text-sm font-semibold shadow-none transition-colors",
                       isActive
                         ? "border-emerald-300 bg-emerald-300 text-white hover:bg-emerald-400"
-                        : "border-border bg-background text-text-strong hover:bg-muted"
+                        : "border-border bg-background/80 text-text-strong hover:bg-muted"
                     )}
                     aria-pressed={isActive}
                   >
@@ -81,7 +81,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
               <Input
                 type="search"
                 placeholder="게시글 검색"
-                className="h-9 rounded-xl border-border bg-muted/80 pr-3.5 pl-9 text-sm shadow-none placeholder:text-text-faint focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
+                className="h-9 rounded-xl border-border bg-background/70 pr-3.5 pl-9 text-sm shadow-none placeholder:text-text-faint focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
               />
             </div>
 
@@ -90,7 +90,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="h-9 rounded-xl border border-border bg-background px-3.5 text-sm font-medium text-text-faint shadow-none hover:bg-muted hover:text-text-strong"
+                  className="h-9 rounded-xl border border-border bg-background/80 px-3.5 text-sm font-medium text-text-faint shadow-none hover:bg-muted hover:text-text-strong"
                 >
                   최신순
                   <ChevronDown className="size-4" strokeWidth={2.1} />

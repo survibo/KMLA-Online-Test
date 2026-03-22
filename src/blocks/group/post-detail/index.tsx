@@ -13,6 +13,10 @@ import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import type { GroupComment, GroupPost } from "@/blocks/group/types"
 import {
+  createGroupDetailCommentThread,
+  type GroupCommentMeta,
+} from "@/blocks/group/comment-thread"
+import {
   GroupPostAvatar,
   GroupPostSummary,
 } from "@/blocks/group/shared"
@@ -23,90 +27,8 @@ type GroupPostDetailProps = {
   className?: string
 }
 
-type GroupCommentMeta = {
-  item: GroupComment
-  depth: number
-  replyCount: number
-  parentAuthorName: string | null
-}
-
 type GroupCommentRowProps = GroupCommentMeta & {
   postAuthorId?: string
-}
-
-function getParentAuthorName(
-  comment: GroupComment,
-  commentMap: Map<string, GroupComment>
-) {
-  if (!comment.parent_id || comment.parent_id === comment.id) {
-    return null
-  }
-
-  const parentComment = commentMap.get(comment.parent_id)
-
-  if (!parentComment || parentComment.id === comment.id) {
-    return null
-  }
-
-  if (parentComment.author.id === comment.author.id) {
-    return null
-  }
-
-  return parentComment.author.name
-}
-
-function countDirectReplies(commentItems: GroupComment[], parentId: string) {
-  return commentItems.filter((item) => item.parent_id === parentId).length
-}
-
-function flattenGroupComments(commentItems: GroupComment[]) {
-  const sortedCommentItems = [...commentItems].sort(
-    (a, b) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-  )
-  const commentMap = new Map(sortedCommentItems.map((item) => [item.id, item]))
-  const childMap = new Map<string | null, GroupComment[]>()
-
-  function getTopLevelParentId(comment: GroupComment) {
-    let currentParentId = comment.parent_id ?? null
-
-    while (currentParentId) {
-      const parentComment = commentMap.get(currentParentId)
-      if (!parentComment?.parent_id) return parentComment?.id ?? currentParentId
-      currentParentId = parentComment.parent_id
-    }
-
-    return null
-  }
-
-  for (const item of sortedCommentItems) {
-    const parentKey = getTopLevelParentId(item)
-    const siblings = childMap.get(parentKey) ?? []
-    siblings.push(item)
-    childMap.set(parentKey, siblings)
-  }
-
-  const flattenedComments: GroupCommentMeta[] = []
-
-  function walkComments(parentId: string | null, actualDepth: number) {
-    const children = childMap.get(parentId) ?? []
-
-    for (const child of children) {
-      flattenedComments.push({
-        item: child,
-        depth: Math.min(actualDepth, 1),
-        replyCount:
-          child.reply_count ?? countDirectReplies(sortedCommentItems, child.id),
-        parentAuthorName: getParentAuthorName(child, commentMap),
-      })
-
-      walkComments(child.id, actualDepth + 1)
-    }
-  }
-
-  walkComments(null, 0)
-
-  return flattenedComments
 }
 
 function GroupCommentRow({
@@ -177,7 +99,7 @@ function GroupCommentThread({
   commentItems?: GroupComment[]
   postAuthorId?: string
 }) {
-  const flattenedComments = flattenGroupComments(commentItems)
+  const flattenedComments = createGroupDetailCommentThread(commentItems)
 
   if (flattenedComments.length === 0) return null
 

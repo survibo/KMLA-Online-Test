@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/drawer"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  createGroupCardCommentThread,
+  type GroupCommentMeta,
+} from "@/blocks/group/comment-thread"
 import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import type { GroupComment, GroupUser } from "@/blocks/group/types"
@@ -51,76 +55,9 @@ function GroupCommentAvatar({
   )
 }
 
-type GroupCommentMeta = {
-  item: GroupComment
-  depth: number
-  replyCount: number
-  parentAuthorName: string | null
-}
-
 type GroupCommentRowProps = GroupCommentMeta & {
   postAuthorId?: string
-}
-
-function getParentAuthorName(
-  comment: GroupComment,
-  commentMap: Map<string, GroupComment>
-) {
-  if (!comment.parent_id || comment.parent_id === comment.id) {
-    return null
-  }
-
-  const parentComment = commentMap.get(comment.parent_id)
-
-  if (!parentComment || parentComment.id === comment.id) {
-    return null
-  }
-
-  if (parentComment.author.id === comment.author.id) {
-    return null
-  }
-
-  return parentComment.author.name
-}
-
-function countDirectReplies(commentItems: GroupComment[], parentId: string) {
-  return commentItems.filter((item) => item.parent_id === parentId).length
-}
-
-function flattenGroupComments(commentItems: GroupComment[]) {
-  const sortedCommentItems = [...commentItems].sort(
-    (a, b) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-  )
-  const commentMap = new Map(sortedCommentItems.map((item) => [item.id, item]))
-  const rootComments = sortedCommentItems.filter((item) => item.parent_id === null)
-
-  return rootComments.map((item) => ({
-    item,
-    depth: 0,
-    replyCount: item.reply_count ?? countDirectReplies(sortedCommentItems, item.id),
-    parentAuthorName: null,
-  }))
-}
-
-function getDirectReplies(
-  commentItems: GroupComment[],
-  parentId: string
-): GroupCommentMeta[] {
-  const sortedCommentItems = [...commentItems].sort(
-    (a, b) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-  )
-  const commentMap = new Map(sortedCommentItems.map((item) => [item.id, item]))
-
-  return sortedCommentItems
-    .filter((item) => item.parent_id === parentId)
-    .map((item) => ({
-      item,
-      depth: 1,
-      replyCount: item.reply_count ?? countDirectReplies(sortedCommentItems, item.id),
-      parentAuthorName: getParentAuthorName(item, commentMap),
-    }))
+  onReplyClick?: () => void
 }
 
 function GroupCommentRow({
@@ -129,6 +66,7 @@ function GroupCommentRow({
   replyCount,
   parentAuthorName,
   postAuthorId,
+  onReplyClick,
 }: GroupCommentRowProps) {
   const likes = item.comment_reactions?.length ?? 0
   const isPostAuthor = item.author_id === postAuthorId
@@ -175,6 +113,7 @@ function GroupCommentRow({
             variant="ghost"
             size="sm"
             className="h-8 justify-start gap-1 px-1.5 py-0 text-text-faint hover:bg-muted hover:text-text-strong"
+            onClick={onReplyClick}
           >
             <MessageCircle className="size-4" strokeWidth={2.2} />
             {depth === 0 ? <span>{replyCount}</span> : null}
@@ -218,10 +157,11 @@ function GroupCommentThread({
   commentItems?: GroupComment[]
   postAuthorId?: string
 }) {
-  const flattenedComments = flattenGroupComments(commentItems)
+  const { topLevelComments, directRepliesByParentId } =
+    createGroupCardCommentThread(commentItems)
   const [expandedCommentIds, setExpandedCommentIds] = useState<string[]>([])
 
-  if (flattenedComments.length === 0) return null
+  if (topLevelComments.length === 0) return null
 
   function toggleReplies(commentId: string) {
     setExpandedCommentIds((currentIds) =>
@@ -231,17 +171,26 @@ function GroupCommentThread({
     )
   }
 
+  function openReplies(commentId: string) {
+    setExpandedCommentIds((currentIds) =>
+      currentIds.includes(commentId) ? currentIds : [...currentIds, commentId]
+    )
+  }
+
   return (
     <div className="flex flex-col gap-5">
-      {flattenedComments.map(({ item, ...meta }, index) => {
+      {topLevelComments.map(({ item, ...meta }, index) => {
         const isExpanded = expandedCommentIds.includes(item.id)
-        const directReplies = getDirectReplies(commentItems, item.id)
+        const directReplies = directRepliesByParentId.get(item.id) ?? []
 
         return (
           <div key={item.id ?? `${item.author.name}-${index}`}>
             <GroupCommentRow
               item={item}
               postAuthorId={postAuthorId}
+              onReplyClick={
+                meta.replyCount > 0 ? () => openReplies(item.id) : undefined
+              }
               {...meta}
             />
             <GroupReplyToggle
@@ -314,7 +263,7 @@ export function GroupPostCommentsDrawer({
               postAuthorId={postAuthorId}
             />
           ) : (
-            <div className="rounded-2xl bg-muted px-4 py-6 text-center text-sm text-text-faint">
+            <div className="px-4 py-6 text-center text-sm text-text-faint">
               아직 댓글이 없습니다. 첫 댓글을 남겨보세요.
             </div>
           )}
