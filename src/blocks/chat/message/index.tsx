@@ -51,7 +51,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
       <div
         ref={scrollContainerRef}
         onScroll={(event) => updateScrollState(event.currentTarget)}
-        className="h-full w-full overflow-y-auto pl-2 pr-1 py-4 text-zinc-950 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:pl-3 sm:pr-2"
+        className="h-full w-full overflow-y-auto px-1 py-4 text-text-strong [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:px-2"
       >
         <div className="pb-10">
           {data.messages.map((message, index) => {
@@ -77,13 +77,13 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                 )}
               >
                 {showDivider ? (
-                  <div className="mb-6 text-center text-xs font-medium text-zinc-400">
+                  <div className="mb-6 text-center text-xs font-medium text-text-faint">
                     {formatChatDividerLabel(message.created_at)}
                   </div>
                 ) : null}
 
                 {!isOwn && startsNewBlock ? (
-                  <div className="mb-0.5 pl-13 text-[0.8125rem] font-normal text-zinc-500">
+                  <div className="mb-0.5 pl-13 text-[0.8125rem] font-normal text-text-faint">
                     {message.sender.name}
                   </div>
                 ) : null}
@@ -123,8 +123,8 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                             : "rounded-bl-[8px]",
                         isOwn ? "rounded-l-[22px]" : "rounded-r-[22px]",
                         isOwn
-                          ? "bg-blue-600 text-white"
-                          : "bg-zinc-100 text-zinc-900"
+                          ? "bg-blue-600 text-white dark:bg-blue-600 dark:text-white"
+                          : "bg-muted text-text-strong"
                       )}
                     >
                       <span className="whitespace-normal break-keep [overflow-wrap:anywhere]">
@@ -143,7 +143,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
         <Button
           type="button"
           size="icon"
-          className="absolute bottom-5 left-1/2 z-10 size-11 -translate-x-1/2 rounded-full bg-white text-zinc-700 shadow-md hover:bg-zinc-50"
+          className="absolute bottom-5 left-1/2 z-10 size-11 -translate-x-1/2 rounded-full border border-border bg-background text-text-faint shadow-md hover:bg-muted hover:text-text-strong"
           onClick={() => {
             const node = scrollContainerRef.current
 

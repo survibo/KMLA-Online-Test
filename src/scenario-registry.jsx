@@ -23,7 +23,7 @@ export const scenarioGroups = [
     label: "Chat Room Card",
     scenarios: chatRoomCardScenarios,
     render: (scenario) => (
-      <div className="min-h-screen bg-white px-4 py-8 sm:px-6">
+      <div className="min-h-screen bg-background px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-xl">
           <ChatRoomCard
             room={scenario.room}

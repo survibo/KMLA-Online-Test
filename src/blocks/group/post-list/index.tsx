@@ -28,8 +28,8 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
     : group.posts
 
   return (
-    <section className={cn("min-h-screen bg-white text-zinc-950", className)}>
-      <header className="sticky top-0 z-10 border-b border-zinc-200/80 bg-white/95 backdrop-blur-sm">
+    <section className={cn("min-h-screen bg-background text-foreground", className)}>
+      <header className="sticky top-0 z-10 border-b border-border/80 bg-background/95 backdrop-blur-sm">
         <div className="px-4 py-3 sm:px-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
@@ -37,7 +37,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="size-8 rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950"
+                className="size-8 rounded-full text-text-faint hover:bg-muted hover:text-text-strong"
                 aria-label="Go back"
               >
                 <ArrowLeft className="size-5" strokeWidth={2.35} />
@@ -61,7 +61,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
                       "h-10 rounded-full border px-5 text-sm font-semibold shadow-none transition-colors",
                       isActive
                         ? "border-emerald-300 bg-emerald-300 text-white hover:bg-emerald-400"
-                        : "border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-50"
+                        : "border-border bg-background text-text-strong hover:bg-muted"
                     )}
                     aria-pressed={isActive}
                   >
@@ -75,13 +75,13 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
           <div className="mt-3 flex items-center gap-2.5">
             <div className="relative min-w-0 flex-1">
               <Search
-                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400"
+                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-faint"
                 strokeWidth={2.1}
               />
               <Input
                 type="search"
                 placeholder="게시글 검색"
-                className="h-9 rounded-xl border-zinc-200 bg-zinc-50/80 pr-3.5 pl-9 text-sm shadow-none placeholder:text-zinc-400 focus-visible:border-zinc-300 focus-visible:ring-2 focus-visible:ring-zinc-200"
+                className="h-9 rounded-xl border-border bg-muted/80 pr-3.5 pl-9 text-sm shadow-none placeholder:text-text-faint focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
               />
             </div>
 
@@ -90,7 +90,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="h-9 rounded-xl border border-zinc-200 bg-white px-3.5 text-sm font-medium text-zinc-700 shadow-none hover:bg-zinc-50"
+                  className="h-9 rounded-xl border border-border bg-background px-3.5 text-sm font-medium text-text-faint shadow-none hover:bg-muted hover:text-text-strong"
                 >
                   최신순
                   <ChevronDown className="size-4" strokeWidth={2.1} />

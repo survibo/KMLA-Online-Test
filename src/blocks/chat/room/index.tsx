@@ -17,11 +17,11 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
   return (
     <section
       className={cn(
-        "flex h-screen flex-col overflow-hidden bg-white text-zinc-950",
+        "flex h-screen flex-col overflow-hidden bg-background text-foreground",
         className
       )}
     >
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-zinc-300 bg-white/95 px-4 py-2.5 backdrop-blur-sm sm:px-6">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-border bg-background/95 px-4 py-2.5 backdrop-blur-sm sm:px-6">
         <Button
           type="button"
           variant="ghost"
@@ -41,7 +41,7 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full text-zinc-500"
+          className="rounded-full text-text-faint hover:bg-muted hover:text-text-strong"
           aria-label="Room info"
         >
           <CircleAlert className="size-5" strokeWidth={2.2} />
@@ -52,8 +52,8 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
         <ChatMessage data={data} className="h-full" />
       </div>
 
-      <div className="sticky bottom-0 z-10 bg-white/95 px-4 py-2.5 backdrop-blur-sm sm:px-6">
-        <div className="flex items-center gap-2 rounded-full bg-zinc-100 px-3 py-1.5">
+      <div className="sticky bottom-0 z-10 bg-background/95 px-4 py-2.5 backdrop-blur-sm sm:px-6">
+        <div className="flex items-center gap-2 rounded-full bg-muted px-3 py-1.5">
           <Button
             type="button"
             variant="ghost"
@@ -70,7 +70,7 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
           <Button
             type="button"
             size="icon"
-            className="rounded-full bg-zinc-900 text-white hover:bg-zinc-800"
+            className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
             aria-label="Send message"
           >
             <SendHorizonal className="size-4" strokeWidth={2.3} />

@@ -14,16 +14,16 @@ type ChatRoomListProps = {
 export function ChatRoomList({ data, className }: ChatRoomListProps) {
   return (
     <section
-      className={cn("min-h-screen bg-white text-zinc-950", className)}
+      className={cn("min-h-screen bg-background text-foreground", className)}
     >
       <header className="px-6 pt-5 pb-4">
         <div className="flex items-center gap-3">
-          <MessageSquareText className="size-8 text-zinc-950" strokeWidth={2.2} />
+          <MessageSquareText className="size-8 text-text-strong" strokeWidth={2.2} />
           <h1 className="text-[2rem] leading-none font-semibold tracking-tight">
             {data.title}
           </h1>
         </div>
-        <p className="mt-7 text-lg text-zinc-500">{data.subtitle}</p>
+        <p className="mt-7 text-lg text-text-soft">{data.subtitle}</p>
       </header>
 
       <div className="px-2 pb-8">
@@ -41,7 +41,7 @@ export function ChatRoomList({ data, className }: ChatRoomListProps) {
         <Button
           type="button"
           variant="ghost"
-          className="h-auto rounded-full px-4 py-2 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-600"
+          className="h-auto rounded-full px-4 py-2 text-text-faint hover:bg-muted hover:text-text-strong"
         >
           더 보기
         </Button>

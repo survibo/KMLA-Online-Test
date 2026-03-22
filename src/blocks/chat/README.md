@@ -29,3 +29,5 @@
 - 공용 스타일이나 타입이 바뀌면 이를 사용하는 `room-card`, `room-list`, `room`, `message`를 함께 점검한다.
 - 공용 아바타는 `shared.tsx`에서 표시 방식만 통일하고, 실제 크기는 각 사용처의 `className`에서 결정한다.
 - 시간 문자열은 raw ISO를 직접 뿌리지 않고 공용 formatter를 사용한다.
+- 라이트/다크 모드를 함께 고려해야 하는 surface/border는 `background`, `muted`, `border`, `primary` 같은 의미 토큰을 우선 사용한다.
+- 일반 텍스트 계층은 surface 토큰과 분리해서 `text-strong`, `text-soft`, `text-faint` 같은 전용 텍스트 토큰을 우선 사용한다.

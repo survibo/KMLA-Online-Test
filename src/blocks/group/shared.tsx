@@ -36,7 +36,7 @@ export function GroupPostAvatar({
   return (
     <Avatar size={avatarSize} className={cn(avatarClassName, "shrink-0", className)}>
       <AvatarImage src={author.img} alt={author.name} />
-      <AvatarFallback className="bg-gradient-to-b from-zinc-100 to-zinc-300 font-semibold text-zinc-600">
+      <AvatarFallback className="bg-muted font-semibold text-text-faint">
         {getGroupInitials(author.name)}
       </AvatarFallback>
     </Avatar>
@@ -64,10 +64,10 @@ export function GroupPostHeader({
       <div className="flex min-w-0 items-start gap-2.5">
         <GroupPostAvatar author={author} />
         <div className="min-w-0">
-          <p className="text-[1.05rem] leading-5 font-semibold tracking-tight text-zinc-900">
+          <p className="text-[1.05rem] leading-5 font-semibold tracking-tight text-text-strong">
             {author.name}
           </p>
-          <p className="mt-0.5 text-[0.875rem] leading-5 font-medium text-zinc-500">
+          <p className="mt-0.5 text-[0.875rem] leading-5 font-medium text-text-faint">
             {formattedCreatedAt}
           </p>
         </div>
@@ -90,12 +90,12 @@ export function GroupPostContent({
       {post.title || post.content ? (
         <div className="space-y-5">
           {post.title ? (
-            <h2 className="text-[1.35rem] leading-[1.12] font-bold tracking-[-0.03em] text-zinc-950">
+            <h2 className="text-[1.35rem] leading-[1.12] font-bold tracking-[-0.03em] text-text-strong">
               {post.title}
             </h2>
           ) : null}
           {post.content ? (
-            <p className="whitespace-pre-line break-keep text-zinc-600">
+            <p className="whitespace-pre-line break-keep text-text-soft">
               {post.content}
             </p>
           ) : null}
@@ -123,7 +123,7 @@ export function GroupPostGallery({
   if (!featuredImage) return null
 
   return (
-    <div className="relative overflow-hidden rounded-[1.5rem] bg-zinc-100">
+    <div className="relative overflow-hidden rounded-[1.5rem] bg-muted">
       <img
         src={featuredImage.url}
         alt={featuredImage.alt ?? altFallback}
@@ -152,7 +152,7 @@ export function GroupPostStats({
     0
 
   return (
-    <div className="-ml-1.5 flex items-center gap-0.5 text-sm text-zinc-500">
+    <div className="-ml-1.5 flex items-center gap-0.5 text-sm text-text-faint">
       <Button
         type="button"
         variant="ghost"
@@ -166,7 +166,7 @@ export function GroupPostStats({
         type="button"
         variant="ghost"
         size="sm"
-        className="h-10 justify-start gap-1 px-2 py-0 text-[0.95rem] text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 [&_svg]:size-5.5"
+        className="h-10 justify-start gap-1 px-2 py-0 text-[0.95rem] text-text-faint hover:bg-muted hover:text-text-strong [&_svg]:size-5.5"
         onClick={onCommentClick}
       >
         <MessageCircle className="size-5" strokeWidth={2.2} />
@@ -176,7 +176,7 @@ export function GroupPostStats({
         type="button"
         variant="ghost"
         size="sm"
-        className="h-10 justify-start gap-1 px-2 py-0 text-[0.95rem] text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 [&_svg]:size-5.5"
+        className="h-10 justify-start gap-1 px-2 py-0 text-[0.95rem] text-text-faint hover:bg-muted hover:text-text-strong [&_svg]:size-5.5"
         aria-label="Share post"
       >
         <Share2 className="size-5" strokeWidth={2.2} />

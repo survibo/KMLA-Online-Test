@@ -26,7 +26,7 @@ export function GroupPostCard({
     <>
       <article
         className={cn(
-          "w-full border-b-2 border-zinc-300 bg-white text-zinc-950",
+          "w-full border-b-2 border-border bg-background text-foreground",
           className
         )}
       >

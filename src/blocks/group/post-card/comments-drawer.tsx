@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer"
@@ -43,7 +44,7 @@ function GroupCommentAvatar({
   return (
     <Avatar size="default" className={cn(className, "shrink-0")}>
       <AvatarImage src={author.img} alt={author.name} />
-      <AvatarFallback className="bg-gradient-to-b from-zinc-100 to-zinc-300 font-semibold text-zinc-600">
+      <AvatarFallback className="bg-muted font-semibold text-text-faint">
         {getInitials(author.name)}
       </AvatarFallback>
     </Avatar>
@@ -140,31 +141,31 @@ function GroupCommentRow({
       <div className="min-w-0 flex-1">
         <div className="py-0.5">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-            <p className="font-semibold text-zinc-900">{item.author.name}</p>
+            <p className="font-semibold text-text-strong">{item.author.name}</p>
             {isPostAuthor ? (
-              <span className="text-[0.8125rem] font-medium text-zinc-400">
+              <span className="text-[0.8125rem] font-medium text-text-faint">
                 작성자
               </span>
             ) : null}
-            <span className="text-[0.8125rem] text-zinc-400">
+            <span className="text-[0.8125rem] text-text-faint">
               {formatRelativeTime(item.created_at)}
             </span>
           </div>
-          <p className="mt-0.5 whitespace-pre-line text-zinc-700">
+          <p className="mt-0.5 whitespace-pre-line text-text-strong">
             {parentAuthorName ? (
-              <span className="mr-1.5 font-medium text-sky-700">
+              <span className="mr-1.5 font-medium text-sky-600 dark:text-sky-400">
                 @{parentAuthorName}
               </span>
             ) : null}
             {item.content}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-0.5 -ml-1.5 text-sm text-zinc-500">
+        <div className="flex flex-wrap items-center gap-0.5 -ml-1.5 text-sm text-text-faint">
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            className="h-8 justify-start gap-1 px-1.5 py-0 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+            className="h-8 justify-start gap-1 px-1.5 py-0 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-600 dark:text-emerald-400 dark:hover:bg-emerald-400/12 dark:hover:text-emerald-300"
           >
             <ThumbsUp className="size-4" strokeWidth={2.2} />
             <span>{likes}</span>
@@ -173,7 +174,7 @@ function GroupCommentRow({
             type="button"
             variant="ghost"
             size="sm"
-            className="h-8 justify-start gap-1 px-1.5 py-0 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700"
+            className="h-8 justify-start gap-1 px-1.5 py-0 text-text-faint hover:bg-muted hover:text-text-strong"
           >
             <MessageCircle className="size-4" strokeWidth={2.2} />
             {depth === 0 ? <span>{replyCount}</span> : null}
@@ -202,7 +203,7 @@ function GroupReplyToggle({
       type="button"
       variant="ghost"
       size="sm"
-      className="mt-1 h-7 px-0 text-sm font-medium text-zinc-500 hover:bg-transparent hover:text-zinc-700"
+      className="mt-1 h-7 px-0 text-sm font-medium text-text-faint hover:bg-transparent hover:text-text-strong"
       onClick={onToggle}
     >
       {expanded ? "답글 숨기기" : `답글 보기 ${replyCount}`}
@@ -294,14 +295,17 @@ export function GroupPostCommentsDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto flex w-full max-w-[800px] flex-col rounded-t-[1.75rem] bg-white data-[vaul-drawer-direction=bottom]:min-h-[60vh] data-[vaul-drawer-direction=bottom]:max-h-[90vh]">
+      <DrawerContent className="mx-auto flex w-full max-w-[800px] flex-col rounded-t-[1.75rem] bg-background data-[vaul-drawer-direction=bottom]:min-h-[60vh] data-[vaul-drawer-direction=bottom]:max-h-[90vh]">
         <DrawerHeader className="px-4 pb-3 pt-5 text-left sm:px-6">
-          <DrawerTitle className="text-lg font-semibold text-zinc-950">
+          <DrawerTitle className="text-lg font-semibold text-text-strong">
             댓글
           </DrawerTitle>
+          <DrawerDescription className="sr-only">
+            게시글의 댓글과 답글을 확인하고 새 댓글을 작성할 수 있는 패널
+          </DrawerDescription>
         </DrawerHeader>
 
-        <Separator className="bg-zinc-200" />
+        <Separator className="bg-border" />
 
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-7 pt-4 sm:px-6 sm:pb-8">
           {commentItems.length > 0 ? (
@@ -310,13 +314,13 @@ export function GroupPostCommentsDrawer({
               postAuthorId={postAuthorId}
             />
           ) : (
-            <div className="rounded-2xl bg-zinc-50 px-4 py-6 text-center text-sm text-zinc-500">
+            <div className="rounded-2xl bg-muted px-4 py-6 text-center text-sm text-text-faint">
               아직 댓글이 없습니다. 첫 댓글을 남겨보세요.
             </div>
           )}
         </div>
 
-        <div className="border-t border-zinc-200 bg-white px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6">
+        <div className="border-t border-border bg-background px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6">
           <div
             ref={composerRef}
             className="flex flex-col gap-3"
@@ -337,13 +341,13 @@ export function GroupPostCommentsDrawer({
               placeholder="이 게시글에 댓글 남기기"
               value={draftComment}
               onChange={(event) => setDraftComment(event.target.value)}
-              className="min-h-10 rounded-2xl border-zinc-200 bg-zinc-50 px-4 py-3 text-sm shadow-none focus-visible:border-zinc-300 focus-visible:ring-2 focus-visible:ring-zinc-200"
+              className="min-h-10 rounded-2xl border-border bg-muted px-4 py-3 text-sm text-text-strong shadow-none placeholder:text-text-faint focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
             />
             <div className="flex min-h-9 justify-end">
               {shouldShowSubmitButton ? (
                 <Button
                   type="button"
-                  className="rounded-full bg-emerald-500 px-4 text-white hover:bg-emerald-600"
+                  className="rounded-full bg-emerald-500 px-4 text-white shadow-none hover:bg-emerald-600 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-400"
                 >
                   댓글 작성
                 </Button>

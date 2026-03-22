@@ -126,26 +126,26 @@ function GroupCommentRow({
       <div className="min-w-0 flex-1">
         <div className="py-0.5">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-            <p className="font-semibold text-zinc-900">{item.author.name}</p>
+            <p className="font-semibold text-text-strong">{item.author.name}</p>
             {isPostAuthor ? (
-              <span className="text-[0.8125rem] font-medium text-zinc-400">
+              <span className="text-[0.8125rem] font-medium text-text-faint">
                 작성자
               </span>
             ) : null}
-            <span className="text-[0.8125rem] text-zinc-400">
+            <span className="text-[0.8125rem] text-text-faint">
               {formatRelativeTime(item.created_at)}
             </span>
           </div>
-          <p className="mt-0.5 whitespace-pre-line text-zinc-700">
+          <p className="mt-0.5 whitespace-pre-line text-text-strong">
             {parentAuthorName ? (
-              <span className="mr-1.5 font-medium text-sky-700">
+              <span className="mr-1.5 font-medium text-sky-600 dark:text-sky-400">
                 @{parentAuthorName}
               </span>
             ) : null}
             {item.content}
           </p>
         </div>
-        <div className="mt-1 flex flex-wrap items-center gap-0.5 -ml-1.5 text-sm text-zinc-500">
+        <div className="mt-1 flex flex-wrap items-center gap-0.5 -ml-1.5 text-sm text-text-faint">
           <Button
             type="button"
             variant="ghost"
@@ -159,7 +159,7 @@ function GroupCommentRow({
             type="button"
             variant="ghost"
             size="sm"
-            className="h-8 justify-start gap-1 px-1.5 py-0 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700"
+            className="h-8 justify-start gap-1 px-1.5 py-0 text-text-faint hover:bg-muted hover:text-text-strong"
           >
             <MessageCircle className="size-4" strokeWidth={2.2} />
             {depth === 0 ? <span>{replyCount}</span> : null}
@@ -201,7 +201,7 @@ export function GroupPostDetail({
   className,
 }: GroupPostDetailProps) {
   return (
-    <section className={cn("w-full bg-white", className)}>
+    <section className={cn("w-full bg-background", className)}>
       <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-6">
           <GroupPostSummary
             post={post}
@@ -212,7 +212,7 @@ export function GroupPostDetail({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+                    className="rounded-full text-text-faint hover:bg-muted hover:text-text-strong"
                     aria-label="More options"
                   >
                     <EllipsisVertical className="size-5" />
@@ -229,7 +229,7 @@ export function GroupPostDetail({
 
           {commentItems.length > 0 ? (
             <div className="space-y-5">
-              <Separator className="bg-zinc-200" />
+              <Separator className="bg-border" />
               <GroupCommentThread
                 commentItems={commentItems}
                 postAuthorId={post.author_id}
