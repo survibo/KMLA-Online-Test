@@ -16,17 +16,23 @@ function applyFontScale(scale) {
   document.documentElement.style.setProperty("--app-font-scale", String(scale))
 }
 
+function getStoredFontScale() {
+  if (typeof window === "undefined") {
+    return DEFAULT_FONT_SCALE
+  }
+
+  const storedScale = window.localStorage.getItem(FONT_SCALE_STORAGE_KEY)
+  const parsedScale = storedScale ? Number(storedScale) : DEFAULT_FONT_SCALE
+
+  return Number.isFinite(parsedScale) ? parsedScale : DEFAULT_FONT_SCALE
+}
+
 export function FontScaleControl() {
-  const [fontScale, setFontScale] = useState(DEFAULT_FONT_SCALE)
+  const [fontScale, setFontScale] = useState(getStoredFontScale)
 
   useEffect(() => {
-    const storedScale = window.localStorage.getItem(FONT_SCALE_STORAGE_KEY)
-    const parsedScale = storedScale ? Number(storedScale) : DEFAULT_FONT_SCALE
-    const nextScale = Number.isFinite(parsedScale) ? parsedScale : DEFAULT_FONT_SCALE
-
-    setFontScale(nextScale)
-    applyFontScale(nextScale)
-  }, [])
+    applyFontScale(fontScale)
+  }, [fontScale])
 
   function handleChange(nextScale) {
     setFontScale(nextScale)

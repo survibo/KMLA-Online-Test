@@ -13,35 +13,44 @@ export function TopLoadingBar() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    if (isLoading) {
+    if (!isLoading) {
+      return
+    }
+
+    const showTimer = window.setTimeout(() => {
       setIsVisible(true)
       setProgress((currentProgress) =>
         currentProgress > 0 ? currentProgress : INITIAL_PROGRESS
       )
+    }, 0)
 
-      const timer = window.setInterval(() => {
-        setProgress((currentProgress) => {
-          if (currentProgress >= MAX_IN_FLIGHT_PROGRESS) {
-            return currentProgress
-          }
+    const progressTimer = window.setInterval(() => {
+      setProgress((currentProgress) => {
+        if (currentProgress >= MAX_IN_FLIGHT_PROGRESS) {
+          return currentProgress
+        }
 
-          const remaining = MAX_IN_FLIGHT_PROGRESS - currentProgress
-          const step = Math.max(remaining * 0.18, 1.6)
+        const remaining = MAX_IN_FLIGHT_PROGRESS - currentProgress
+        const step = Math.max(remaining * 0.18, 1.6)
 
-          return Math.min(currentProgress + step, MAX_IN_FLIGHT_PROGRESS)
-        })
-      }, 120)
+        return Math.min(currentProgress + step, MAX_IN_FLIGHT_PROGRESS)
+      })
+    }, 120)
 
-      return () => {
-        window.clearInterval(timer)
-      }
+    return () => {
+      window.clearTimeout(showTimer)
+      window.clearInterval(progressTimer)
     }
+  }, [isLoading])
 
-    if (!isVisible) {
+  useEffect(() => {
+    if (isLoading || !isVisible) {
       return
     }
 
-    setProgress(100)
+    const completeTimer = window.setTimeout(() => {
+      setProgress(100)
+    }, 0)
 
     const hideTimer = window.setTimeout(() => {
       setIsVisible(false)
@@ -49,6 +58,7 @@ export function TopLoadingBar() {
     }, 220)
 
     return () => {
+      window.clearTimeout(completeTimer)
       window.clearTimeout(hideTimer)
     }
   }, [isLoading, isVisible])

@@ -22,12 +22,6 @@ const CHAT_DIVIDER_GAP_MS = 1000 * 60 * 60 * 5
 const CHAT_TIME_LABEL_GAP_MS = 1000 * 60 * 60
 const SCROLL_TO_BOTTOM_THRESHOLD = 160
 
-function getIsoTime(isoString: string | undefined) {
-  if (!isoString) return null
-
-  return getIsoTimestamp(isoString)
-}
-
 function hasLongGap(previousTime: number | null, currentTime: number | null) {
   if (previousTime === null || currentTime === null) return true
 
@@ -40,18 +34,13 @@ function hasTimeLabelGap(previousTime: number | null, currentTime: number | null
   return currentTime - previousTime >= CHAT_TIME_LABEL_GAP_MS
 }
 
-function isSameCalendarDay(
-  previousCreatedAt: string | undefined,
-  currentCreatedAt: string
-) {
-  return isSameIsoDay(previousCreatedAt, currentCreatedAt)
-}
-
 function createMessageLayout(
   messages: ChatMessageThreadData["messages"],
   currentUserId: string
 ) {
-  const messageTimes = messages.map((message) => getIsoTime(message.created_at))
+  const messageTimes = messages.map((message) =>
+    message.created_at ? getIsoTimestamp(message.created_at) : null
+  )
 
   return messages.map((message, index) => {
     const previousMessage = messages[index - 1]
@@ -66,7 +55,7 @@ function createMessageLayout(
     const endsBlock =
       nextMessage?.sender_id !== message.sender_id ||
       hasLongGap(currentTime, nextTime)
-    const showDateDivider = !isSameCalendarDay(
+    const showDateDivider = !isSameIsoDay(
       previousMessage?.created_at,
       message.created_at
     )
@@ -92,6 +81,14 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
   const messageLayout = useMemo(
     () => createMessageLayout(data.messages, data.current_user_id),
     [data.messages, data.current_user_id]
+  )
+  const visibleSelectedMessageId = useMemo(
+    () =>
+      selectedMessageId &&
+      data.messages.some((message) => message.id === selectedMessageId)
+        ? selectedMessageId
+        : null,
+    [data.messages, selectedMessageId]
   )
 
   function readShouldShowScrollToBottom(node: HTMLDivElement) {
@@ -137,16 +134,6 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
   }, [data.messages])
 
   useEffect(() => {
-    setSelectedMessageId((previousSelectedMessageId) => {
-      if (!previousSelectedMessageId) return null
-
-      return data.messages.some((message) => message.id === previousSelectedMessageId)
-        ? previousSelectedMessageId
-        : null
-    })
-  }, [data.messages])
-
-  useEffect(() => {
     return () => {
       if (scrollStateAnimationFrameRef.current !== null) {
         window.cancelAnimationFrame(scrollStateAnimationFrameRef.current)
@@ -174,7 +161,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
               },
               index
             ) => {
-              const isSelected = selectedMessageId === message.id
+              const isSelected = visibleSelectedMessageId === message.id
 
               return (
                 <div
@@ -258,7 +245,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                           "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                         )}
                       >
-                        <span className="whitespace-normal break-keep [overflow-wrap:anywhere]">
+                        <span className="whitespace-normal break-keep wrap-anywhere">
                           {message.content}
                         </span>
                       </div>

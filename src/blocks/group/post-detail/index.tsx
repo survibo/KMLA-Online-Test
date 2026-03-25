@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
@@ -29,26 +29,19 @@ export function GroupPostDetail({
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const composerContainerRef = useRef<HTMLDivElement | null>(null)
+  const [composerContainer, setComposerContainer] =
+    useState<HTMLDivElement | null>(null)
   const [composerOffset, setComposerOffset] = useState(0)
   const openMenuPostId = searchParams.get("menu")
   const isMenuOpen = openMenuPostId === post.id
 
   useEffect(() => {
-    const composerContainer = composerContainerRef.current
-
     if (!composerContainer || typeof ResizeObserver === "undefined") {
       return
     }
 
-    const updateComposerOffset = () => {
-      setComposerOffset(composerContainer.offsetHeight)
-    }
-
-    updateComposerOffset()
-
     const resizeObserver = new ResizeObserver(() => {
-      updateComposerOffset()
+      setComposerOffset(composerContainer.offsetHeight)
     })
 
     resizeObserver.observe(composerContainer)
@@ -56,7 +49,7 @@ export function GroupPostDetail({
     return () => {
       resizeObserver.disconnect()
     }
-  }, [])
+  }, [composerContainer])
 
   function updateMenuQuery(nextPostId: string | null, replace = false) {
     const nextSearchParams = new URLSearchParams(searchParams)
@@ -146,7 +139,7 @@ export function GroupPostDetail({
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/85">
         <div
-          ref={composerContainerRef}
+          ref={setComposerContainer}
           className="mx-auto w-full max-w-4xl px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6"
         >
           <GroupCommentComposer />
