@@ -1,4 +1,11 @@
-import { createBrowserRouter, Link, Navigate, Outlet, RouterProvider } from "react-router-dom"
+import {
+  createBrowserRouter,
+  Link,
+  Navigate,
+  Outlet,
+  RouterProvider,
+  useLocation,
+} from "react-router-dom"
 
 import { GroupPhotoViewer } from "@/blocks/group/photo-viewer"
 import { FontScaleControl } from "@/components/font-scale-control"
@@ -32,11 +39,14 @@ async function scenarioBlockPreviewLoader({ params, request }) {
 }
 
 function AppLayout() {
+  const location = useLocation()
+  const isScenarioRoute = location.pathname.startsWith("/scenarios")
+
   return (
     <>
       <TopLoadingBar />
       <Outlet />
-      <FontScaleControl />
+      {isScenarioRoute ? null : <FontScaleControl />}
     </>
   )
 }

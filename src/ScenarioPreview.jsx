@@ -1,7 +1,17 @@
 import { useEffect } from "react"
+import { Check, ChevronDown, Settings2 } from "lucide-react"
 import { Link, Navigate, useParams, useSearchParams } from "react-router-dom"
 
+import { fontScaleOptions, useFontScaleControl } from "@/components/font-scale"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 import {
   getScenarioDomain,
@@ -31,15 +41,52 @@ function createScenarioHref(pathname, searchParams, overrides = {}) {
   return queryString ? `${pathname}?${queryString}` : pathname
 }
 
-function ScenarioThemeToggle({ theme, buildHref }) {
+function ScenarioPreviewControls({ theme, buildThemeHref }) {
+  const { fontScale, setFontScale } = useFontScaleControl()
+
   return (
-    <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2 rounded-full border border-border bg-background/95 p-2 shadow-sm backdrop-blur sm:bottom-6 sm:left-6">
-      <Button type="button" variant={theme === "light" ? "default" : "outline"} size="sm" asChild>
-        <Link replace to={buildHref("light")}>Light</Link>
-      </Button>
-      <Button type="button" variant={theme === "dark" ? "default" : "outline"} size="sm" asChild>
-        <Link replace to={buildHref("dark")}>Dark</Link>
-      </Button>
+    <div className="fixed top-4 right-4 z-50 sm:top-6 sm:right-6">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-10 rounded-full border-border bg-background/95 px-3 shadow-sm backdrop-blur"
+          >
+            <Settings2 className="size-4" strokeWidth={2} />
+            Preview
+            <ChevronDown className="size-4" strokeWidth={2} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-44 rounded-2xl">
+          <DropdownMenuLabel>Theme</DropdownMenuLabel>
+          {["light", "dark"].map((themeOption) => (
+            <DropdownMenuItem key={themeOption} asChild>
+              <Link
+                replace
+                to={buildThemeHref(themeOption)}
+                className="flex w-full items-center justify-between"
+              >
+                <span className="capitalize">{themeOption}</span>
+                {theme === themeOption ? <Check className="size-4" /> : null}
+              </Link>
+            </DropdownMenuItem>
+          ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Text Size</DropdownMenuLabel>
+          {fontScaleOptions.map((option) => (
+            <DropdownMenuItem
+              key={option.label}
+              onClick={() => setFontScale(option.value)}
+              className="flex items-center justify-between"
+            >
+              <span>{option.label}</span>
+              {fontScale === option.value ? <Check className="size-4" /> : null}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }
@@ -75,7 +122,7 @@ function ScenarioPreviewShell({
 
         <div className="mt-8">{children}</div>
       </div>
-      <ScenarioThemeToggle theme={theme} buildHref={buildThemeHref} />
+      <ScenarioPreviewControls theme={theme} buildThemeHref={buildThemeHref} />
     </main>
   )
 }
@@ -196,6 +243,7 @@ export function ScenarioBlockPreview() {
   const theme = getPreviewTheme(searchParams)
   const domain = getScenarioDomain(domainId)
   const scenarioGroup = getScenarioGroup(domainId, blockId)
+  useScenarioDocumentTheme(theme)
 
   if (!domain || !scenarioGroup) {
     return <Navigate to="/scenarios" replace />
@@ -212,14 +260,12 @@ export function ScenarioBlockPreview() {
 
   const activeScenario = scenarioGroup.scenarios[scenarioIndex]
 
-  useScenarioDocumentTheme(theme)
-
   return (
     <main className={`${theme} min-h-screen bg-muted text-foreground`}>
       <div>{scenarioGroup.render(activeScenario)}</div>
-      <ScenarioThemeToggle
+      <ScenarioPreviewControls
         theme={theme}
-        buildHref={(nextTheme) =>
+        buildThemeHref={(nextTheme) =>
           createScenarioHref(
             `/scenarios/${domain.id}/${scenarioGroup.id}`,
             searchParams,

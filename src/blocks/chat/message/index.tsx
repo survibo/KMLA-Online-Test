@@ -171,13 +171,13 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                   )}
                 >
                   {showDateDivider ? (
-                    <div className="mb-6 text-center text-xs font-medium text-text-faint">
+                    <div className="mb-6 text-center text-[0.78rem] font-medium text-text-soft">
                       {formatIsoMonthDayMeridiemTime(message.created_at)}
                     </div>
                   ) : null}
 
                   {showTimeGapLabel ? (
-                    <div className="mb-3 text-center text-[0.6875rem] font-normal text-text-faint">
+                    <div className="mb-3 text-center text-[0.78rem] font-medium text-text-soft">
                       {formatIsoMeridiemTime(message.created_at)}
                     </div>
                   ) : null}
@@ -227,7 +227,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                           )
                         }}
                         className={cn(
-                          "inline-block max-w-full cursor-pointer px-4 py-2.5 text-[0.9375rem] leading-[1.45] shadow-none outline-none",
+                          "inline-block max-w-full cursor-pointer px-4 py-2.5 text-[0.97rem] leading-[1.45] shadow-none outline-none",
                           startsNewBlock
                             ? "rounded-t-[22px]"
                             : isOwn
@@ -253,7 +253,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                       {isSelected ? (
                         <div
                           className={cn(
-                            "mt-1 px-1 text-[0.6875rem] leading-none text-text-faint",
+                            "mt-1 px-1 text-[0.75rem] leading-none font-medium text-text-soft",
                             isOwn ? "text-left" : "text-right"
                           )}
                         >

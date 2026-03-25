@@ -61,7 +61,7 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="rounded-full text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+            className="-translate-y-1 rounded-full text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
             aria-label="Add attachment"
           >
             <Plus className="size-5" strokeWidth={2.3} />
@@ -77,7 +77,7 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
           <Button
             type="button"
             size="icon"
-            className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+            className="-translate-y-1 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
             aria-label="Send message"
           >
             <SendHorizonal className="size-4" strokeWidth={2.3} />

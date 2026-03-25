@@ -1,8 +1,10 @@
 import {
+  baseGroupPostFifthPostId,
   baseGroupPostFourthPostId,
   baseGroupPostLatestPostId,
   baseGroupPostListGroupId,
   baseGroupPostSecondPostId,
+  baseGroupPostSixthPostId,
   baseGroupPostThirdPostId,
 } from "@/blocks/group/mock"
 
@@ -49,6 +51,8 @@ export const groupPostListModeSellScenario: GroupPostListScenario = {
         [baseGroupPostSecondPostId]: "buy",
         [baseGroupPostThirdPostId]: "sell",
         [baseGroupPostFourthPostId]: "buy",
+        [baseGroupPostFifthPostId]: "sell",
+        [baseGroupPostSixthPostId]: "buy",
       },
     }
   ),
@@ -69,6 +73,8 @@ export const groupPostListModeBuyScenario: GroupPostListScenario = {
         [baseGroupPostSecondPostId]: "buy",
         [baseGroupPostThirdPostId]: "sell",
         [baseGroupPostFourthPostId]: "buy",
+        [baseGroupPostFifthPostId]: "sell",
+        [baseGroupPostSixthPostId]: "buy",
       },
     }
   ),

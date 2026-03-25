@@ -28,6 +28,8 @@ export const baseGroupPostLatestPostId = "24ba4ff5-0b6d-49cd-8de7-93f7659b92eb"
 export const baseGroupPostSecondPostId = "712c98eb-e5f8-4f0f-a7df-0fca91e277cb"
 export const baseGroupPostThirdPostId = "0f29f5de-28c0-46be-9274-f8ba70e8e428"
 export const baseGroupPostFourthPostId = "d969b2ea-c27a-43aa-b809-fcb67948320a"
+export const baseGroupPostFifthPostId = "9b3cbec7-b8ff-4c15-9f88-baa73efa53ad"
+export const baseGroupPostSixthPostId = "4f3bb6d4-b637-4f7d-9ac4-692f956b1e87"
 
 export const baseGroupPostUsers: GroupUser[] = [
   { id: "1d41df50-5d98-4e37-b12e-e9d830f04f34", name: "이주형", img: null },
@@ -65,7 +67,11 @@ function createListPostRecord(
   createdAt: string,
   title: string,
   content: string,
-  authorId: string
+  authorId: string,
+  counts?: {
+    comment_count?: number
+    reaction_count?: number
+  }
 ): GroupPostRecord {
   return {
     id,
@@ -73,8 +79,8 @@ function createListPostRecord(
     author_id: authorId,
     title,
     content,
-    comment_count: 1,
-    reaction_count: 3,
+    comment_count: counts?.comment_count ?? 1,
+    reaction_count: counts?.reaction_count ?? 3,
     created_at: createdAt,
     updated_at: null,
     deleted_at: null,
@@ -122,6 +128,28 @@ export const baseGroupPostRecords: GroupPostRecord[] = [
     "체육관 사용 신청",
     "동아리 체육관 사용은 수요일까지 신청서를 제출해 주세요.",
     "c2ecfe2d-e2e2-4808-ac65-f2014cf03efa"
+  ),
+  createListPostRecord(
+    baseGroupPostFifthPostId,
+    "2026-03-17T21:10:00+09:00",
+    "야간 점호 전 택배 수령 안내",
+    "오늘 도착한 택배는 밤 9시 40분 전까지 생활관 사무실에서 찾아가 주세요.",
+    "890aa09e-7a2f-4963-bd48-e7214efd2a0d",
+    {
+      comment_count: 0,
+      reaction_count: 0,
+    }
+  ),
+  createListPostRecord(
+    baseGroupPostSixthPostId,
+    "2026-03-17T08:05:00+09:00",
+    "주중 세면실 청소 구역 공지",
+    "각 층 세면실 청소 구역표를 오늘 아침 기준으로 다시 배부했습니다.",
+    "4f2d6bd8-7399-47ea-9be9-5be2f83750a5",
+    {
+      comment_count: 0,
+      reaction_count: 0,
+    }
   ),
 ]
 

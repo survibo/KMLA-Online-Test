@@ -240,11 +240,11 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
         onMenuOpen={handleMenuOpen}
       />
 
-      <div className="sticky bottom-0 flex justify-end px-4 pb-10 pt-12 sm:px-6">
+      <div className="pointer-events-none fixed right-0 bottom-0 left-0 flex justify-end px-4 pb-10 pt-12 sm:px-6">
         <Button
           type="button"
           size="icon"
-          className="size-14 rounded-full bg-emerald-400 text-white shadow-[0_14px_32px_rgba(52,211,153,0.35)] hover:bg-emerald-500"
+          className="pointer-events-auto size-14 rounded-full bg-emerald-400 text-white shadow-[0_14px_32px_rgba(52,211,153,0.35)] hover:bg-emerald-500"
           aria-label="Create post"
         >
           <Plus className="size-7" strokeWidth={2.2} />
