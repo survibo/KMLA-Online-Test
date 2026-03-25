@@ -18,18 +18,18 @@ export const chatRoomDefaultScenario: ChatRoomScenario = {
   data: createChatRoomScreenData(),
 }
 
-export const chatRoomRecentScenario: ChatRoomScenario = {
-  id: "recent",
-  label: "최근만",
-  description: "최신 메시지 구간만 남겨 room 화면 밀도를 확인하는 상태",
+export const chatRoomEmptyScenario: ChatRoomScenario = {
+  id: "empty",
+  label: "메시지 없음",
+  description: "아직 대화가 시작되지 않은 빈 채팅방 상태",
   data: createChatRoomScreenData({
-    messages: baseChatRoomScreenData.messages.slice(-24),
+    messages: [],
   }),
 }
 
 export const chatRoomScenarios: ChatRoomScenario[] = [
   chatRoomDefaultScenario,
-  chatRoomRecentScenario,
+  chatRoomEmptyScenario,
 ]
 
 export const activeChatRoomScenarioIndex = 0 // 0 ~ 1, total 2 scenarios

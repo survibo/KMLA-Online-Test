@@ -36,16 +36,6 @@ export function ChatRoomList({ data, className }: ChatRoomListProps) {
           />
         ))}
       </div>
-
-      <div className="px-6 pb-8">
-        <Button
-          type="button"
-          variant="ghost"
-          className="h-auto rounded-full px-4 py-2 text-text-faint hover:bg-muted hover:text-text-strong"
-        >
-          더 보기
-        </Button>
-      </div>
     </section>
   )
 }
