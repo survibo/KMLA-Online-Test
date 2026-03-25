@@ -101,25 +101,37 @@ export function GroupPostHeader({
   )
 }
 
-export function GroupPostOverflowMenu() {
-  const [open, setOpen] = useState(false)
-
+export function GroupPostOverflowMenuButton({
+  onClick,
+}: {
+  onClick?: () => void
+}) {
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="rounded-full text-text-faint hover:bg-muted hover:text-text-strong"
-        aria-label="More options"
-        onClick={(event) => {
-          event.currentTarget.blur()
-          setOpen(true)
-        }}
-      >
-        <EllipsisVertical className="size-5" />
-      </Button>
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      className="rounded-full text-text-faint hover:bg-muted hover:text-text-strong"
+      aria-label="More options"
+      onClick={(event) => {
+        event.currentTarget.blur()
+        onClick?.()
+      }}
+    >
+      <EllipsisVertical className="size-5" />
+    </Button>
+  )
+}
 
+export function GroupPostOverflowMenuDrawer({
+  open,
+  onOpenChange,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="mx-auto w-full max-w-[32rem] rounded-t-[1.5rem] bg-background data-[vaul-drawer-direction=bottom]:h-auto data-[vaul-drawer-direction=bottom]:max-h-[80vh]">
         <DrawerHeader className="px-4 pb-2 pt-5 text-left sm:px-5">
           <DrawerTitle className="text-base font-semibold text-text-strong">
@@ -137,7 +149,7 @@ export function GroupPostOverflowMenu() {
             type="button"
             variant="ghost"
             className="h-12 w-full justify-start rounded-2xl px-4 text-base text-text-strong hover:bg-muted"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
           >
             Share
           </Button>
@@ -145,7 +157,7 @@ export function GroupPostOverflowMenu() {
             type="button"
             variant="ghost"
             className="h-12 w-full justify-start rounded-2xl px-4 text-base text-text-strong hover:bg-muted"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
           >
             Save
           </Button>
@@ -153,13 +165,24 @@ export function GroupPostOverflowMenu() {
             type="button"
             variant="ghost"
             className="h-12 w-full justify-start rounded-2xl px-4 text-base text-destructive hover:bg-destructive/10 hover:text-destructive"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
           >
             Report
           </Button>
         </div>
       </DrawerContent>
     </Drawer>
+  )
+}
+
+export function GroupPostOverflowMenu() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <GroupPostOverflowMenuButton onClick={() => setOpen(true)} />
+      <GroupPostOverflowMenuDrawer open={open} onOpenChange={setOpen} />
+    </>
   )
 }
 

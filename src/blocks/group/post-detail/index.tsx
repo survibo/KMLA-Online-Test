@@ -8,7 +8,12 @@ import {
   GroupCommentsEmptyState,
   GroupCommentsThread,
 } from "@/blocks/group/shared-comments"
-import { GroupPostSummary } from "@/blocks/group/shared"
+import {
+  GroupPostOverflowMenuButton,
+  GroupPostOverflowMenuDrawer,
+  GroupPostSummary,
+} from "@/blocks/group/shared"
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 type GroupPostDetailProps = {
   post: GroupPost
@@ -21,8 +26,13 @@ export function GroupPostDetail({
   commentItems = [],
   className,
 }: GroupPostDetailProps) {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const composerContainerRef = useRef<HTMLDivElement | null>(null)
   const [composerOffset, setComposerOffset] = useState(0)
+  const openMenuPostId = searchParams.get("menu")
+  const isMenuOpen = openMenuPostId === post.id
 
   useEffect(() => {
     const composerContainer = composerContainerRef.current
@@ -48,6 +58,63 @@ export function GroupPostDetail({
     }
   }, [])
 
+  function updateMenuQuery(nextPostId: string | null, replace = false) {
+    const nextSearchParams = new URLSearchParams(searchParams)
+
+    if (nextPostId) {
+      nextSearchParams.set("menu", nextPostId)
+    } else {
+      nextSearchParams.delete("menu")
+    }
+
+    const nextSearch = nextSearchParams.toString()
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: nextSearch ? `?${nextSearch}` : "",
+      },
+      {
+        replace,
+        state: nextPostId
+          ? {
+              ...location.state,
+              menuDrawerSourcePath: `${location.pathname}${location.search}`,
+              menuDrawerPostId: nextPostId,
+            }
+          : location.state,
+      }
+    )
+  }
+
+  function handleMenuOpen() {
+    if (isMenuOpen) return
+
+    updateMenuQuery(post.id)
+  }
+
+  function handleMenuOpenChange(nextOpen: boolean) {
+    if (nextOpen) {
+      handleMenuOpen()
+      return
+    }
+
+    if (!isMenuOpen) return
+
+    const sourcePath =
+      typeof location.state?.menuDrawerSourcePath === "string"
+        ? location.state.menuDrawerSourcePath
+        : null
+    const currentPath = `${location.pathname}${location.search}`
+
+    if (sourcePath && sourcePath !== currentPath) {
+      navigate(-1)
+      return
+    }
+
+    updateMenuQuery(null, true)
+  }
+
   return (
     <section className={cn("min-h-screen w-full bg-background", className)}>
       <div
@@ -60,6 +127,7 @@ export function GroupPostDetail({
       >
         <GroupPostSummary
           post={post}
+          trailing={<GroupPostOverflowMenuButton onClick={handleMenuOpen} />}
         />
 
         <div className="space-y-5">
@@ -84,6 +152,11 @@ export function GroupPostDetail({
           <GroupCommentComposer />
         </div>
       </div>
+
+      <GroupPostOverflowMenuDrawer
+        open={isMenuOpen}
+        onOpenChange={handleMenuOpenChange}
+      />
     </section>
   )
 }

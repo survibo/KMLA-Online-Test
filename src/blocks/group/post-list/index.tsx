@@ -3,6 +3,10 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 import { GroupPostCard } from "@/blocks/group/post-card"
 import { GroupPostCommentsDrawer } from "@/blocks/group/post-card/comments-drawer"
+import {
+  GroupPostOverflowMenuButton,
+  GroupPostOverflowMenuDrawer,
+} from "@/blocks/group/shared"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -36,6 +40,11 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
     posts.find((post) => post.id === openCommentsPostId) ??
     group.posts.find((post) => post.id === openCommentsPostId) ??
     null
+  const openMenuPostId = searchParams.get("menu")
+  const activeMenuPost =
+    posts.find((post) => post.id === openMenuPostId) ??
+    group.posts.find((post) => post.id === openMenuPostId) ??
+    null
 
   function updateCommentsQuery(nextPostId: string | null, replace = false) {
     const nextSearchParams = new URLSearchParams(searchParams)
@@ -66,6 +75,35 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
     )
   }
 
+  function updateMenuQuery(nextPostId: string | null, replace = false) {
+    const nextSearchParams = new URLSearchParams(searchParams)
+
+    if (nextPostId) {
+      nextSearchParams.set("menu", nextPostId)
+    } else {
+      nextSearchParams.delete("menu")
+    }
+
+    const nextSearch = nextSearchParams.toString()
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: nextSearch ? `?${nextSearch}` : "",
+      },
+      {
+        replace,
+        state: nextPostId
+          ? {
+              ...location.state,
+              menuDrawerSourcePath: `${location.pathname}${location.search}`,
+              menuDrawerPostId: nextPostId,
+            }
+          : location.state,
+      }
+    )
+  }
+
   function handleCommentsOpen(postId: string) {
     if (openCommentsPostId === postId) return
 
@@ -87,6 +125,29 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
     }
 
     updateCommentsQuery(null, true)
+  }
+
+  function handleMenuOpen(postId: string) {
+    if (openMenuPostId === postId) return
+
+    updateMenuQuery(postId)
+  }
+
+  function handleMenuOpenChange(nextOpen: boolean) {
+    if (nextOpen || !openMenuPostId) return
+
+    const sourcePath =
+      typeof location.state?.menuDrawerSourcePath === "string"
+        ? location.state.menuDrawerSourcePath
+        : null
+    const currentPath = `${location.pathname}${location.search}`
+
+    if (sourcePath && sourcePath !== currentPath) {
+      navigate(-1)
+      return
+    }
+
+    updateMenuQuery(null, true)
   }
 
   return (
@@ -175,6 +236,9 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
             post={post}
             timeVariant="relative"
             onCommentClick={() => handleCommentsOpen(post.id)}
+            trailing={
+              <GroupPostOverflowMenuButton onClick={() => handleMenuOpen(post.id)} />
+            }
           />
         ))}
       </div>
@@ -195,6 +259,11 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
         onOpenChange={handleCommentsOpenChange}
         commentItems={activeCommentsPost?.post_comments ?? []}
         postAuthorId={activeCommentsPost?.author_id}
+      />
+
+      <GroupPostOverflowMenuDrawer
+        open={Boolean(activeMenuPost)}
+        onOpenChange={handleMenuOpenChange}
       />
     </section>
   )

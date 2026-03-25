@@ -57,7 +57,7 @@ export function TopLoadingBar() {
     <div
       aria-hidden="true"
       className={cn(
-        "pointer-events-none fixed inset-x-0 top-0 z-[100] h-0.5 bg-transparent transition-opacity duration-200",
+        "pointer-events-none fixed inset-x-0 top-0 z-[100] h-[3px] bg-transparent transition-opacity duration-200",
         isVisible ? "opacity-100" : "opacity-0"
       )}
     >

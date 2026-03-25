@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 import type { GroupPost } from "@/blocks/group/types"
@@ -12,6 +12,7 @@ type GroupPostCardProps = {
   post: GroupPost
   timeVariant?: "absolute" | "relative"
   className?: string
+  trailing?: ReactNode
   commentsOpen?: boolean
   onCommentClick?: () => void
   onCommentsOpenChange?: (open: boolean) => void
@@ -21,6 +22,7 @@ export function GroupPostCard({
   post,
   timeVariant = "absolute",
   className,
+  trailing,
   commentsOpen,
   onCommentClick,
   onCommentsOpenChange,
@@ -61,6 +63,7 @@ export function GroupPostCard({
           <GroupPostSummary
             post={post}
             timeVariant={timeVariant}
+            trailing={trailing}
             onCommentClick={handleCommentClick}
           />
         </div>

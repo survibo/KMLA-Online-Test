@@ -30,7 +30,7 @@ export const groupPostListDefaultScenario: GroupPostListScenario = {
 export const groupPostListLoadingBarScenario: GroupPostListScenario = {
   id: "loading-bar",
   label: "로딩바 확인",
-  description: "이 시나리오로 진입할 때 preview route loader를 잠깐 지연시켜 상단 로딩바를 확인하는 상태",
+  description: "`loading-bar-test=1`과 함께 진입할 때만 preview route loader를 잠깐 지연시켜 상단 로딩바를 확인하는 상태",
   group: createGroupPostListGroup(),
 }
 

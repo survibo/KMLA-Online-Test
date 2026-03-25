@@ -13,10 +13,12 @@ import {
 async function scenarioBlockPreviewLoader({ params, request }) {
   const requestUrl = new URL(request.url)
   const scenarioIndex = requestUrl.searchParams.get("scenario")
+  const loadingBarTest = requestUrl.searchParams.get("loading-bar-test")
   const shouldDelayForLoadingBar =
     params.domainId === "group" &&
     params.blockId === "post-list" &&
-    scenarioIndex === "1"
+    scenarioIndex === "1" &&
+    loadingBarTest === "1"
 
   if (shouldDelayForLoadingBar) {
     const delayMs = 500 + Math.floor(Math.random() * 1001)

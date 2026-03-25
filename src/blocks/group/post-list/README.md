@@ -32,6 +32,7 @@
 - 필요할 때만 헤더 아래에 `팝니다 / 삽니다` 같은 거래 모드 버튼을 추가하되, UI는 기존 둥근 버튼 톤을 유지하고 상태만 토글처럼 하나씩 선택되게 둔다.
 - 목록 본문은 카드 컴포넌트를 그대로 세로로 쌓는다.
 - 댓글 drawer 열림 상태와 `comments=<postId>` query param 동기화는 목록 block이 한 번만 관리하고, 실제 댓글 drawer도 목록 하단에서 단일 인스턴스로 렌더링한다.
+- 게시글 `...` menu drawer도 `menu=<postId>` query param과 함께 목록 block이 단일 인스턴스로 관리한다.
 - 이 block은 "목록 껍데기" 역할까지만 맡는다.
 
 ## Files
@@ -47,7 +48,7 @@
 mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
 1. `mock.ts`는 도메인 raw mock에서 목록용 group/post projection만 계산한다.
-2. 목록 길이, 모드 버튼 유무, preview route 기반 로딩 확인 같은 실험은 `mock.scenarios.ts`에서 scenario로 분리해 관리한다.
+2. 목록 길이, 모드 버튼 유무, preview route 기반 로딩 확인 같은 실험은 `mock.scenarios.ts`에서 scenario로 분리해 관리하고, 로딩 확인은 필요할 때만 별도 query flag로 켠다.
 3. 카드 구조가 바뀌더라도 목록 mock은 복제가 아니라 같은 raw post를 읽도록 유지한다.
 4. preview에서 볼 케이스는 `active...Scenario` 하나만 고르면 되게 유지한다.
 
