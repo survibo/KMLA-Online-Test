@@ -1,9 +1,10 @@
+import { useState } from "react"
 import { ArrowLeft, CircleAlert, Plus, SendHorizonal } from "lucide-react"
 
 import { ChatMessage } from "@/blocks/chat/message"
 import { ChatAvatar } from "@/blocks/chat/shared"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
 import type { ChatRoomScreenData } from "./types"
@@ -14,6 +15,8 @@ type ChatRoomProps = {
 }
 
 export function ChatRoom({ data, className }: ChatRoomProps) {
+  const [draftMessage, setDraftMessage] = useState("")
+
   return (
     <section
       className={cn(
@@ -53,7 +56,7 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
       </div>
 
       <div className="sticky bottom-0 z-10 bg-background/95 px-4 py-2.5 backdrop-blur-sm sm:px-6">
-        <div className="flex items-center gap-2 rounded-full bg-muted px-3 py-1.5">
+        <div className="flex items-end gap-2 rounded-[1.75rem] bg-muted px-3 py-2">
           <Button
             type="button"
             variant="ghost"
@@ -63,9 +66,13 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
           >
             <Plus className="size-5" strokeWidth={2.3} />
           </Button>
-          <Input
+          <Textarea
             placeholder="메시지 입력"
-            className="h-9 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
+            value={draftMessage}
+            onChange={(event) => setDraftMessage(event.target.value)}
+            rows={1}
+            enterKeyHint="enter"
+            className="min-h-9 max-h-32 resize-none border-0 bg-transparent px-0 py-2 shadow-none focus-visible:ring-0"
           />
           <Button
             type="button"

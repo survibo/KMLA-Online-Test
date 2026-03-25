@@ -1,9 +1,9 @@
 import { createBrowserRouter, Link, Navigate, Outlet, RouterProvider } from "react-router-dom"
 
+import { GroupPhotoViewer } from "@/blocks/group/photo-viewer"
 import { FontScaleControl } from "@/components/font-scale-control"
 import { TopLoadingBar } from "@/components/top-loading-bar"
 import { Example } from "./Example"
-import { PhotoViewer } from "./PhotoViewer"
 import {
   ScenarioBlockPreview,
   ScenarioDomainPreview,
@@ -105,7 +105,7 @@ const router = createBrowserRouter([
       },
       {
         path: "photo",
-        element: <PhotoViewer />,
+        element: <GroupPhotoViewer />,
       },
       {
         path: "scenarios",

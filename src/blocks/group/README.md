@@ -9,6 +9,7 @@
 - `types.ts`: group 공용 데이터 타입
 - `mock.ts`: group, post, image, comment, reaction 공용 raw mock data와 projection helper
 - `shared.tsx`: group post 계열 block이 함께 쓰는 공용 UI 조각
+- `photo-viewer/`: group post gallery에서 여는 이미지 viewer route
 - `post-card/`: 목록 카드 block
 - `post-detail/`: 게시글 상세 block
 - `post-list/`: 게시글 목록 block

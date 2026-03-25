@@ -11,7 +11,8 @@ function buildPhotoSearch(searchParams, imageId) {
 
   return `?${nextSearchParams.toString()}`
 }
-export function PhotoViewer() {
+
+export function GroupPhotoViewer() {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
