@@ -232,7 +232,7 @@ export function GroupCommentComposer({
           placeholder="댓글을 입력하세요..."
           value={draftComment}
           onChange={(event) => setDraftComment(event.target.value)}
-          className="min-h-[2.25rem] resize-none border-0 bg-transparent px-0 py-0 text-sm text-text-strong shadow-none placeholder:text-text-faint focus-visible:ring-0"
+          className="min-h-[2rem] resize-none border-0 bg-transparent px-0 py-0 text-sm text-text-strong shadow-none placeholder:text-text-faint focus-visible:ring-0"
         />
         <div className="mt-1.5 flex min-h-8 items-center justify-end">
           {shouldShowSubmitButton ? (

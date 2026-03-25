@@ -20,7 +20,7 @@ export type GroupPostCardScenario = {
 const busyDiscussionMockData = createGroupPostMockData({
   posts: baseGroupPostMockData.posts.map((post) =>
     post.id === baseGroupPostPrimaryPostId
-      ? { ...post, comment_count: 4, reaction_count: 10 }
+      ? { ...post, comment_count: 7, reaction_count: 10 }
       : post
   ),
   post_images: [],
@@ -122,6 +122,39 @@ const busyDiscussionMockData = createGroupPostMockData({
       content: "네, 학번 등록만 되어 있으면 신입생도 바로 신청 가능합니다.",
       reply_count: 0,
       created_at: "2026-03-20T15:36:00+09:00",
+      updated_at: null,
+      deleted_at: null,
+    },
+    {
+      id: "1a3f5107-dc1e-45e4-b3d4-e0e8f50b7ea4",
+      post_id: baseGroupPostPrimaryPostId,
+      author_id: "c2ecfe2d-e2e2-4808-ac65-f2014cf03efa",
+      parent_id: null,
+      content: "사이즈 표를 이미지 말고 텍스트로도 한 번 정리해 주시면 비교하기 더 편할 것 같아요.",
+      reply_count: 0,
+      created_at: "2026-03-20T15:38:00+09:00",
+      updated_at: null,
+      deleted_at: null,
+    },
+    {
+      id: "3b4d05f4-1f3f-4869-8c8b-2157ca9d79f7",
+      post_id: baseGroupPostPrimaryPostId,
+      author_id: "f6fdb3ab-fab2-4c70-9c3b-c3b78cca5140",
+      parent_id: null,
+      content: "단체 주문 마감 직전에 다시 한 번 알림 올려 주시면 놓치지 않고 신청할 수 있을 것 같습니다.",
+      reply_count: 0,
+      created_at: "2026-03-20T15:40:00+09:00",
+      updated_at: null,
+      deleted_at: null,
+    },
+    {
+      id: "d8d7b1d9-b08b-4b18-a52d-a57c8ecb39f3",
+      post_id: baseGroupPostPrimaryPostId,
+      author_id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
+      parent_id: null,
+      content: "후드집업 말고 맨투맨도 후보에 들어가는지 궁금합니다. 수요가 있으면 같이 투표 받아도 좋겠어요.",
+      reply_count: 0,
+      created_at: "2026-03-20T15:42:00+09:00",
       updated_at: null,
       deleted_at: null,
     },

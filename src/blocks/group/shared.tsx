@@ -1,4 +1,4 @@
-import { type ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import {
   EllipsisVertical,
   MessageCircle,
@@ -10,11 +10,13 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer"
+import { Separator } from "@/components/ui/separator"
 import { formatIsoDateTime, formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import type {
@@ -100,25 +102,64 @@ export function GroupPostHeader({
 }
 
 export function GroupPostOverflowMenu() {
+  const [open, setOpen] = useState(false)
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="rounded-full text-text-faint hover:bg-muted hover:text-text-strong"
-          aria-label="More options"
-        >
-          <EllipsisVertical className="size-5" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-40">
-        <DropdownMenuItem>Share</DropdownMenuItem>
-        <DropdownMenuItem>Save</DropdownMenuItem>
-        <DropdownMenuItem variant="destructive">Report</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="rounded-full text-text-faint hover:bg-muted hover:text-text-strong"
+        aria-label="More options"
+        onClick={(event) => {
+          event.currentTarget.blur()
+          setOpen(true)
+        }}
+      >
+        <EllipsisVertical className="size-5" />
+      </Button>
+
+      <DrawerContent className="mx-auto w-full max-w-[32rem] rounded-t-[1.5rem] bg-background data-[vaul-drawer-direction=bottom]:h-auto data-[vaul-drawer-direction=bottom]:max-h-[80vh]">
+        <DrawerHeader className="px-4 pb-2 pt-5 text-left sm:px-5">
+          <DrawerTitle className="text-base font-semibold text-text-strong">
+            게시글 메뉴
+          </DrawerTitle>
+          <DrawerDescription className="sr-only">
+            게시글에 대해 실행할 수 있는 동작 목록
+          </DrawerDescription>
+        </DrawerHeader>
+
+        <Separator className="bg-border" />
+
+        <div className="px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:px-4">
+          <Button
+            type="button"
+            variant="ghost"
+            className="h-12 w-full justify-start rounded-2xl px-4 text-base text-text-strong hover:bg-muted"
+            onClick={() => setOpen(false)}
+          >
+            Share
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="h-12 w-full justify-start rounded-2xl px-4 text-base text-text-strong hover:bg-muted"
+            onClick={() => setOpen(false)}
+          >
+            Save
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="h-12 w-full justify-start rounded-2xl px-4 text-base text-destructive hover:bg-destructive/10 hover:text-destructive"
+            onClick={() => setOpen(false)}
+          >
+            Report
+          </Button>
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }
 

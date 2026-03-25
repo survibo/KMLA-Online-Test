@@ -1,6 +1,7 @@
 import { createBrowserRouter, Link, Navigate, Outlet, RouterProvider } from "react-router-dom"
 
 import { FontScaleControl } from "@/components/font-scale-control"
+import { TopLoadingBar } from "@/components/top-loading-bar"
 import { Example } from "./Example"
 import { PhotoViewer } from "./PhotoViewer"
 import {
@@ -12,6 +13,7 @@ import {
 function AppLayout() {
   return (
     <>
+      <TopLoadingBar />
       <Outlet />
       <FontScaleControl />
     </>
