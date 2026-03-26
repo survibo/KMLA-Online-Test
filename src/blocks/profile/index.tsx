@@ -24,12 +24,17 @@ export function Profile({ data, className }: ProfileProps) {
   const initials = data.rawUser.name.slice(0, 2)
 
   return (
-    <section className={cn("relative flex min-h-screen flex-col overflow-hidden bg-background", className)}>
+    <section
+      className={cn(
+        "relative flex min-h-full flex-1 flex-col overflow-hidden bg-background",
+        className
+      )}
+    >
       <div className="profile-hero h-[15rem] shrink-0 bg-background" aria-hidden="true" />
 
       <div className="-mt-[4.25rem] flex flex-1 flex-col rounded-t-[2rem] bg-card px-6 pb-10 shadow-[0_-1px_0_color-mix(in_oklch,var(--border)_75%,transparent),0_-18px_48px_color-mix(in_oklch,var(--foreground)_5%,transparent)] sm:px-8">
         <div className="relative flex justify-center">
-          <Avatar className="-mt-[5.5rem] h-[10.75rem] w-[10.75rem] border-[5px] border-background shadow-[0_12px_30px_color-mix(in_oklch,var(--foreground)_10%,transparent)] sm:h-[12.5rem] sm:w-[12.5rem]">
+          <Avatar className="-mt-[5.5rem] h-[8rem] w-[8rem] border-[5px] border-background shadow-[0_12px_30px_color-mix(in_oklch,var(--foreground)_10%,transparent)] sm:h-[12.5rem] sm:w-[12.5rem]">
             <AvatarImage src={data.avatarUrl} alt={data.displayName} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
@@ -37,7 +42,7 @@ export function Profile({ data, className }: ProfileProps) {
 
         <div className="mt-[1.5rem]">
           <div className="relative flex items-center justify-center">
-            <h1 className="text-center text-[2rem] leading-none font-semibold tracking-tight text-text-strong">
+            <h1 className="text-center text-[1.5rem] leading-none font-semibold tracking-tight text-text-strong">
               {data.displayName}
             </h1>
             <Button
@@ -50,8 +55,9 @@ export function Profile({ data, className }: ProfileProps) {
               <SquarePen className="size-5" strokeWidth={2.1} />
             </Button>
           </div>
+          <p className="mt-3 text-center text-base leading-7 text-text-soft">{data.bio}</p>
           {data.subtitle ? (
-            <p className="text-center text-sm text-text-soft">{data.subtitle}</p>
+            <p className="mt-2 text-center text-sm text-text-soft">{data.subtitle}</p>
           ) : null}
         </div>
 

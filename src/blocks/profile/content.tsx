@@ -13,7 +13,6 @@ export function ProfileContent({ data }: ProfileContentProps) {
     <>
       <TabsContent value="info" className="mt-8 flex-1">
         <div className="grid gap-8">
-          <ProfileField label="소개" value={data.bio} />
           <ProfileField label="전화번호" value={data.phoneNumber} icon={Phone} />
           <ProfileField label="이메일" value={data.email} icon={Mail} />
         </div>

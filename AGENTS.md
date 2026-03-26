@@ -21,11 +21,10 @@
 - `mock.scenarios.ts`만 수정하고 `src/ScenarioPreview.jsx`, `src/scenario-registry.jsx` 미확인
 - 스키마(`SCHEME.md`)와 어긋나는 컬럼명 임의 사용
 - raw ISO 문자열을 formatter 없이 직접 UI에 출력
-- preview에 `min-h-screen`, `bg-muted`, `rounded-`, `border` 등을 조합해 폰/앱 프레임처럼 감싸는 wrapper 추가
+- preview에 `min-h-screen`, `bg-muted`, `rounded-*`, `border` 등을 조합해 폰/앱 프레임처럼 감싸는 wrapper 추가
 - TypeScript를 제거하거나 `.js`로 변환
 - 터미널에서 한글이 깨져 보인다는 이유만으로 파일을 재작성하거나 문자열 복구 시도
 - 깨진 터미널 출력값을 그대로 복사해 파일에 재사용
-- 그룹 게시글 관련 block/타입에 `community` 접두어 사용 (`group` 사용)
 - block `mock.ts`에서 raw data를 독립적으로 복제
 - `mock.scenarios.ts`에서 projection 계산식을 각 scenario마다 따로 작성 (계산 경로는 하나)
 - raw mock data에 join 결과나 화면 전용 계산값을 미리 삽입 (프론트 실험에 꼭 필요한 경우 제외)
@@ -60,8 +59,8 @@ src/blocks/<block-name>/
 ```
 src/blocks/<domain>/
   README.md
-  types.ts          (도메인 공통 타입)
-  mock.ts           (도메인 공통 raw mock + selector/helper)
+  types.ts          (도메인 공통 타입, 필요시)
+  mock.ts           (도메인 공통 raw mock + selector/helper, 필요시)
   shared.tsx        (도메인 공통 UI 조각, 필요시)
   styles.css        (도메인 공통 스타일 토큰, 필요시)
   <block-name>/
@@ -74,14 +73,12 @@ src/blocks/<domain>/
 
 ### 각 파일의 책임
 
-| 파일                          | 책임                                                           |
-| ----------------------------- | -------------------------------------------------------------- |
-| `index.tsx`                   | block 본체                                                     |
-| `types.ts`                    | block 전용 타입                                                |
-| `mock.ts`                     | raw mock data + 생성 helper (block 수준에서는 projection 계산) |
-| `mock.scenarios.ts`           | raw mock override + projection 재호출로 완성된 실험 케이스     |
-| `README.md`                   | 규칙, 사용법, 결정사항                                         |
-| `src/blocks/<domain>/mock.ts` | schema-aligned raw mock + 도메인 공용 selector/helper          |
+- `index.tsx` → block 본체
+- `types.ts` → block 전용 타입
+- `mock.ts` → raw mock data + 생성 helper (block 수준에서는 projection 계산)
+- `mock.scenarios.ts` → raw mock override + projection 재호출로 완성된 실험 케이스
+- `README.md` → 규칙, 사용법, 결정사항
+- `src/blocks/<domain>/mock.ts` → schema-aligned raw mock + 도메인 공용 selector/helper
 
 ### 공용 파일 예시
 
@@ -95,22 +92,13 @@ src/blocks/<domain>/
 
 ## 문서 기록 위치 판단
 
-| 조건                              | 기록 위치                                    |
-| --------------------------------- | -------------------------------------------- |
-| 프로젝트 전반 공통 규칙           | `AGENTS.md`                                  |
-| 여러 block이 공유하는 도메인 규칙 | 루트의 별도 md 파일                          |
-| 특정 도메인 block 전용            | `src/blocks/<domain>/<block-name>/README.md` |
-| 단일 block 전용                   | `src/blocks/<block-name>/README.md`          |
-| 데이터 구조 기준                  | `SCHEME.md`                                  |
+- 프로젝트 전반 공통 규칙 → `AGENTS.md`
+- 여러 block이 공유하는 도메인 규칙 → 루트의 별도 md 파일
+- 특정 도메인 block 전용 → `src/blocks/<domain>/<block-name>/README.md`
+- 단일 block 전용 → `src/blocks/<block-name>/README.md`
+- 데이터 구조 기준 → `SCHEME.md`
 
 특정 기능 하나에만 적용되는 상세 정책, 특정 화면의 임시 의사결정, 일회성 메모는 이 문서에 넣지 않는다.
-
----
-
-## 이름 규칙
-
-- 그룹 게시글 관련 block과 타입은 `community` 대신 `group` 접두어를 사용한다.
-  - 예: `group-post-card`, `GroupPost`, `GroupComment`, `src/blocks/group-post/types.ts`
 
 ---
 
@@ -156,17 +144,15 @@ src/blocks/<domain>/
 raw mock data → block mock projection → mock scenario
 ```
 
-- raw mock data: 실제 스키마/API 응답에 최대한 가까운 원재료
-- block mock projection: raw mock을 block props에 맞게 가공한 값
-- mock scenario: raw mock 일부를 override하고 projection을 재계산한 완성 케이스
+- **raw mock data**: 실제 스키마/API 응답에 최대한 가까운 원재료
+- **block mock projection**: raw mock을 block props에 맞게 가공한 값
+- **mock scenario**: raw mock 일부를 override하고 projection을 재계산한 완성 케이스
 
 ### 도메인 단위 mock 판단
 
-| 조건                                                | 방향                               |
-| --------------------------------------------------- | ---------------------------------- |
-| 단일 block 단기 실험                                | block 내부 base mock으로 시작 가능 |
-| 같은 도메인에서 여러 block이 같은 엔티티 공유       | 도메인 루트 raw mock 우선          |
-| unread, latest item, count, 정렬 같은 파생값이 중요 | 반드시 projection helper에서 계산  |
+- 단일 block 단기 실험 → block 내부 base mock으로 시작 가능
+- 같은 도메인에서 여러 block이 같은 엔티티 공유 → 도메인 루트 raw mock 우선
+- unread, latest item, count, 정렬 같은 파생값이 중요 → 반드시 projection helper에서 계산
 
 - 같은 도메인에서 두 번째 block부터는 도메인 루트 raw mock 구조를 우선 검토한다.
 - 도메인 루트 `mock.ts`에는 raw data와 이를 조회/계산하는 helper만 둔다.
@@ -191,16 +177,14 @@ raw mock data → block mock projection → mock scenario
 
 ### shadcn/ui 사용 판단
 
-| 조건                                       | 방향             |
-| ------------------------------------------ | ---------------- |
-| 범용 상호작용 (버튼, 입력, 다이얼로그 등)  | `shadcn/ui` 우선 |
-| 서비스 고유 레이아웃 또는 표현이 중요한 UI | block 직접 구현  |
+- 범용 상호작용 (버튼, 입력, 다이얼로그 등) → `shadcn/ui` 우선
+- 서비스 고유 레이아웃 또는 표현이 중요한 UI → block 직접 구현
 
 우선 검토 컴포넌트: `Button`, `Avatar`, `Card`, `DropdownMenu`, `Dialog`, `Drawer`, `Tabs`, `Popover`, `Separator`, `Input`, `Textarea`
 
 ### 스타일 규칙
 
-- 기본 색상과 surface 스타일은 `src/index.css`에 정의된 전역 토큰(`background`, `foreground`, `card`, `text-`, `border`, `primary` 등)을 우선 사용한다.
+- 기본 색상과 surface 스타일은 `src/index.css`에 정의된 전역 토큰(`background`, `foreground`, `card`, `text-*`, `border`, `primary` 등)을 우선 사용한다.
 - 다크 모드에서도 동일한 색상을 유지해야 하는 경우에만 예외적으로 하드코딩 색상을 사용한다.
 - 공용 스타일 토큰은 도메인 폴더 내부 CSS 파일에 모은다.
 - block 본체에는 의미 있는 class명과 레이아웃 class만 남기고, 도메인 전용 표현은 도메인 CSS로 분리한다.
@@ -210,7 +194,6 @@ raw mock data → block mock projection → mock scenario
 생성한다:
 
 - 같은 도메인에서 두 번 이상 반복되는 표현
-- 색상, radius, hover/focus 톤처럼 한 번에 바뀔 가능성이 큰 값
 - drawer 방향 selector, data attribute selector, 복합 hover/focus 상태처럼 JSX에서 읽기 어려운 규칙
 - 여러 selector가 얽히거나 JSX에 두면 의미가 흐려지는 규칙이 누적될 때
 
@@ -277,6 +260,6 @@ raw mock data → block mock projection → mock scenario
   - `mock.scenarios.ts` — 실험 케이스를 읽기 쉽게 설명하는가
   - `README.md` — 현재 동작과 결정사항을 설명하는가
 - [ ] 시나리오를 바꿨다면 `src/ScenarioPreview.jsx`와 `src/scenario-registry.jsx`도 확인했는가
-- [ ] 시간 문자열을 직접 출력하지 않고 formatter를 사용했는가
+- [ ] 공용 lib를 사용하였는가(`datetime.ts` 등)
 - [ ] 새 합의가 생겼다면 가장 가까운 위치의 md 파일에 기록했는가
 - [ ] 터미널에서 한글이 깨져 보여도 실제 파일 손상으로 단정하지 않았는가
