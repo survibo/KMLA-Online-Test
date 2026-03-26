@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import type { GroupComment, GroupPost } from "@/blocks/group/types"
+import { useQueryDrawerState } from "@/blocks/group/use-query-drawer-state"
 import {
   GroupCommentComposer,
   GroupCommentsEmptyState,
@@ -13,7 +14,6 @@ import {
   GroupPostOverflowMenuDrawer,
   GroupPostSummary,
 } from "@/blocks/group/shared"
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 type GroupPostDetailProps = {
   post: GroupPost
@@ -26,13 +26,15 @@ export function GroupPostDetail({
   commentItems = [],
   className,
 }: GroupPostDetailProps) {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
   const [composerContainer, setComposerContainer] =
     useState<HTMLDivElement | null>(null)
   const [composerOffset, setComposerOffset] = useState(0)
-  const openMenuPostId = searchParams.get("menu")
+  const menuDrawer = useQueryDrawerState({
+    queryKey: "menu",
+    sourcePathStateKey: "menuDrawerSourcePath",
+    sourceIdStateKey: "menuDrawerPostId",
+  })
+  const openMenuPostId = menuDrawer.openId
   const isMenuOpen = openMenuPostId === post.id
 
   useEffect(() => {
@@ -51,39 +53,8 @@ export function GroupPostDetail({
     }
   }, [composerContainer])
 
-  function updateMenuQuery(nextPostId: string | null, replace = false) {
-    const nextSearchParams = new URLSearchParams(searchParams)
-
-    if (nextPostId) {
-      nextSearchParams.set("menu", nextPostId)
-    } else {
-      nextSearchParams.delete("menu")
-    }
-
-    const nextSearch = nextSearchParams.toString()
-
-    navigate(
-      {
-        pathname: location.pathname,
-        search: nextSearch ? `?${nextSearch}` : "",
-      },
-      {
-        replace,
-        state: nextPostId
-          ? {
-              ...location.state,
-              menuDrawerSourcePath: `${location.pathname}${location.search}`,
-              menuDrawerPostId: nextPostId,
-            }
-          : location.state,
-      }
-    )
-  }
-
   function handleMenuOpen() {
-    if (isMenuOpen) return
-
-    updateMenuQuery(post.id)
+    menuDrawer.open(post.id)
   }
 
   function handleMenuOpenChange(nextOpen: boolean) {
@@ -94,18 +65,7 @@ export function GroupPostDetail({
 
     if (!isMenuOpen) return
 
-    const sourcePath =
-      typeof location.state?.menuDrawerSourcePath === "string"
-        ? location.state.menuDrawerSourcePath
-        : null
-    const currentPath = `${location.pathname}${location.search}`
-
-    if (sourcePath && sourcePath !== currentPath) {
-      navigate(-1)
-      return
-    }
-
-    updateMenuQuery(null, true)
+    menuDrawer.close()
   }
 
   return (

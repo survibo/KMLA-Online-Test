@@ -1,12 +1,12 @@
 import { memo, useMemo } from "react"
 import { ArrowLeft, ChevronDown, Plus, Search } from "lucide-react"
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 import { GroupPostCard } from "@/blocks/group/post-card"
 import { GroupPostCommentsDrawer } from "@/blocks/group/post-card/comments-drawer"
 import {
   GroupPostOverflowMenuDrawer,
 } from "@/blocks/group/shared"
+import { useQueryDrawerState } from "@/blocks/group/use-query-drawer-state"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -25,9 +25,6 @@ type GroupPostListProps = {
 }
 
 export function GroupPostList({ group, className }: GroupPostListProps) {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
   const hasModes = Boolean(group.modes?.length && group.activeModeId)
   const posts = useMemo(
     () =>
@@ -40,119 +37,45 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
         : group.posts,
     [group.activeModeId, group.postModeById, group.posts, hasModes]
   )
-  const openCommentsPostId = searchParams.get("comments")
+  const commentsDrawer = useQueryDrawerState({
+    queryKey: "comments",
+    sourcePathStateKey: "commentsDrawerSourcePath",
+    sourceIdStateKey: "commentsDrawerPostId",
+  })
+  const menuDrawer = useQueryDrawerState({
+    queryKey: "menu",
+    sourcePathStateKey: "menuDrawerSourcePath",
+    sourceIdStateKey: "menuDrawerPostId",
+  })
+  const openCommentsPostId = commentsDrawer.openId
   const activeCommentsPost =
     posts.find((post) => post.id === openCommentsPostId) ??
     group.posts.find((post) => post.id === openCommentsPostId) ??
     null
-  const openMenuPostId = searchParams.get("menu")
+  const openMenuPostId = menuDrawer.openId
   const activeMenuPost =
     posts.find((post) => post.id === openMenuPostId) ??
     group.posts.find((post) => post.id === openMenuPostId) ??
     null
 
-  function updateCommentsQuery(nextPostId: string | null, replace = false) {
-    const nextSearchParams = new URLSearchParams(searchParams)
-
-    if (nextPostId) {
-      nextSearchParams.set("comments", nextPostId)
-    } else {
-      nextSearchParams.delete("comments")
-    }
-
-    const nextSearch = nextSearchParams.toString()
-
-    navigate(
-      {
-        pathname: location.pathname,
-        search: nextSearch ? `?${nextSearch}` : "",
-      },
-      {
-        replace,
-        state: nextPostId
-          ? {
-              ...location.state,
-              commentsDrawerSourcePath: `${location.pathname}${location.search}`,
-              commentsDrawerPostId: nextPostId,
-            }
-          : location.state,
-      }
-    )
-  }
-
-  function updateMenuQuery(nextPostId: string | null, replace = false) {
-    const nextSearchParams = new URLSearchParams(searchParams)
-
-    if (nextPostId) {
-      nextSearchParams.set("menu", nextPostId)
-    } else {
-      nextSearchParams.delete("menu")
-    }
-
-    const nextSearch = nextSearchParams.toString()
-
-    navigate(
-      {
-        pathname: location.pathname,
-        search: nextSearch ? `?${nextSearch}` : "",
-      },
-      {
-        replace,
-        state: nextPostId
-          ? {
-              ...location.state,
-              menuDrawerSourcePath: `${location.pathname}${location.search}`,
-              menuDrawerPostId: nextPostId,
-            }
-          : location.state,
-      }
-    )
-  }
-
   function handleCommentsOpen(postId: string) {
-    if (openCommentsPostId === postId) return
-
-    updateCommentsQuery(postId)
+    commentsDrawer.open(postId)
   }
 
   function handleCommentsOpenChange(nextOpen: boolean) {
     if (nextOpen || !openCommentsPostId) return
 
-    const sourcePath =
-      typeof location.state?.commentsDrawerSourcePath === "string"
-        ? location.state.commentsDrawerSourcePath
-        : null
-    const currentPath = `${location.pathname}${location.search}`
-
-    if (sourcePath && sourcePath !== currentPath) {
-      navigate(-1)
-      return
-    }
-
-    updateCommentsQuery(null, true)
+    commentsDrawer.close()
   }
 
   function handleMenuOpen(postId: string) {
-    if (openMenuPostId === postId) return
-
-    updateMenuQuery(postId)
+    menuDrawer.open(postId)
   }
 
   function handleMenuOpenChange(nextOpen: boolean) {
     if (nextOpen || !openMenuPostId) return
 
-    const sourcePath =
-      typeof location.state?.menuDrawerSourcePath === "string"
-        ? location.state.menuDrawerSourcePath
-        : null
-    const currentPath = `${location.pathname}${location.search}`
-
-    if (sourcePath && sourcePath !== currentPath) {
-      navigate(-1)
-      return
-    }
-
-    updateMenuQuery(null, true)
+    menuDrawer.close()
   }
 
   return (
