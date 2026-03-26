@@ -216,6 +216,12 @@ mock 재점검이 필요한 경우:
 
 판단: 범용 상호작용 → `shadcn/ui` / 서비스 표현 → block 조합
 
+추가 규칙:
+
+- preview에서 모바일 기기 화면이나 앱 캔버스를 흉내 내는 바깥 wrapper를 임의로 추가하지 않는다.
+- 예: `min-h-screen`, `bg-muted`, `px-*`, `py-*`, `max-w-*`, `rounded-*`, `border` 조합으로 "폰 프레임처럼 보이게" 감싸는 패턴
+- block UI를 보여주는 목적이면 우선 block 자체를 그대로 렌더링한다.
+
 ## Router Rule
 
 라우팅은 당분간 명시적 route 설정 파일 방식을 우선한다.
@@ -257,7 +263,7 @@ src/blocks/<domain>/
   mock.ts        (필요시)
   shared.tsx     (필요시)
   types.ts       (필요시)
-  styles.css     (필요시)
+  styles.css     (정말 꼭 필요시)
   something/
     index.tsx
     mock.ts
@@ -295,6 +301,8 @@ src/blocks/<domain>/
 - block 본체에는 의미 있는 class명과 레이아웃 class만 남기고, 도메인 전용 표현은 도메인 CSS로 분리한다.
 - 기본 색상과 surface 스타일은 `src/index.css`에 정의된 전역 토큰(`background`, `foreground`, `card`, `text-*`, `border`, `primary` 등)을 우선 사용한다.
 - 다크 모드에서도 동일한 색상을 유지해야 하는 경우에만 예외적으로 하드코딩 색상을 사용한다.
+- 단일 block 작업에서 JSX/Tailwind로 충분히 읽히면 `styles.css`를 만들지 않는다.
+- `styles.css`는 여러 selector가 얽히거나, JSX에 두면 의미가 흐려지는 규칙이 누적될 때만 만든다.
 
 CSS로 분리하는 기준:
 

@@ -35,7 +35,6 @@ async function scenarioBlockPreviewLoader({ params, request }) {
 
   return null
 }
-
 function AppLayout() {
   const location = useLocation()
   const isScenarioRoute = location.pathname.startsWith("/scenarios")

@@ -217,11 +217,11 @@ Table gongangs {
   }
 }
 
-Table gisangsong {
+Table song_requests {
   id uuid [pk]
-  date date [not null]
-  number int2 [not null, note: '1 or 2']
+  requester_id uuid [not null, ref: > users.id]
   url text [not null]
+  requested_at timestamptz [not null, default: `now()`]
 }
 
 

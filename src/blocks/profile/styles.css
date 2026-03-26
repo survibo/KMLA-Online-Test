@@ -1,0 +1,13 @@
+.profile-hero {
+  background-image:
+    radial-gradient(
+      circle at top center,
+      color-mix(in oklch, var(--brand-green-light) 20%, transparent) 0%,
+      transparent 52%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--background) 84%, var(--brand-green-light) 16%) 0%,
+      var(--background) 100%
+    );
+}

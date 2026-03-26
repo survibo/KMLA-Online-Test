@@ -12,6 +12,7 @@ import type { MainFooterData, MainFooterTab, MainFooterTabId } from "./types"
 type MainFooterProps = {
   data: MainFooterData
   className?: string
+  embedded?: boolean
 }
 
 const tabIconById: Record<MainFooterTabId, typeof Home> = {
@@ -22,16 +23,22 @@ const tabIconById: Record<MainFooterTabId, typeof Home> = {
   profile: CircleUserRound,
 }
 
-export function MainFooter({ data, className }: MainFooterProps) {
+export function MainFooter({
+  data,
+  className,
+  embedded = false,
+}: MainFooterProps) {
   return (
     <section
       className={cn(
-        "min-h-screen bg-background px-0 py-0 text-foreground",
+        embedded
+          ? "bg-transparent px-0 py-0 text-foreground"
+          : "min-h-screen bg-background px-0 py-0 text-foreground",
         className
       )}
     >
-      <div className="flex min-h-screen w-full flex-col">
-        <div className="flex-1 bg-transparent" />
+      <div className={cn("flex w-full flex-col", embedded ? "min-h-0" : "min-h-screen")}>
+        {embedded ? null : <div className="flex-1 bg-transparent" />}
 
         <div>
           <nav

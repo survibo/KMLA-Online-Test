@@ -16,9 +16,18 @@ import { groupPostDetailScenarios } from "@/blocks/group/post-detail/mock.scenar
 import { GroupPostList } from "@/blocks/group/post-list"
 import { groupPostListScenarios } from "@/blocks/group/post-list/mock.scenarios"
 import { MainFooter } from "@/blocks/main/footer"
+import { createMainFooterData, createMainFooterTabs } from "@/blocks/main/footer/mock"
 import { mainFooterScenarios } from "@/blocks/main/footer/mock.scenarios"
 import { MainHeader } from "@/blocks/main/header"
 import { mainHeaderScenarios } from "@/blocks/main/header/mock.scenarios"
+import { MainContentFooter } from "@/blocks/main/content-footer"
+import { createMainContentFooterData } from "@/blocks/main/content-footer/mock"
+import { mainContentFooterScenarios } from "@/blocks/main/content-footer/mock.scenarios"
+import { MainHeaderContentFooter } from "@/blocks/main/header-content-footer"
+import { createMainHeaderContentFooterData } from "@/blocks/main/header-content-footer/mock"
+import { mainHeaderContentFooterScenarios } from "@/blocks/main/header-content-footer/mock.scenarios"
+import { Profile } from "@/blocks/profile"
+import { profileScenarios } from "@/blocks/profile/mock.scenarios"
 
 export const scenarioGroups = [
   {
@@ -86,6 +95,19 @@ export const scenarioGroups = [
   },
   {
     domain: "main",
+    id: "content-footer",
+    label: "Main Content Footer",
+    scenarios: mainContentFooterScenarios,
+    render: (scenario) => (
+      <MainContentFooter data={scenario.data}>
+        <div className="min-h-full bg-background px-4 py-8 text-text-soft">
+          Content area
+        </div>
+      </MainContentFooter>
+    ),
+  },
+  {
+    domain: "main",
     id: "footer",
     label: "Main Footer",
     scenarios: mainFooterScenarios,
@@ -97,6 +119,37 @@ export const scenarioGroups = [
     label: "Main Header",
     scenarios: mainHeaderScenarios,
     render: (scenario) => <MainHeader data={scenario.data} />,
+  },
+  {
+    domain: "main",
+    id: "header-content-footer",
+    label: "Main Header Content Footer",
+    scenarios: mainHeaderContentFooterScenarios,
+    render: (scenario) => (
+      <MainHeaderContentFooter data={scenario.data}>
+        <div className="min-h-full bg-background px-4 py-8 text-text-soft">
+          Content area
+        </div>
+      </MainHeaderContentFooter>
+    ),
+  },
+  {
+    domain: "profile",
+    id: "profile",
+    label: "Profile",
+    scenarios: profileScenarios,
+    render: (scenario) => (
+      <MainContentFooter
+        data={createMainContentFooterData({
+          footer: createMainFooterData({
+            activeTabId: "profile",
+            tabs: createMainFooterTabs("profile"),
+          }),
+        })}
+      >
+        <Profile data={scenario.data} className="min-h-full" />
+      </MainContentFooter>
+    ),
   },
 ]
 
@@ -112,6 +165,10 @@ export const scenarioDomains = [
   {
     id: "main",
     label: "Main",
+  },
+  {
+    id: "profile",
+    label: "Profile",
   },
 ]
 
